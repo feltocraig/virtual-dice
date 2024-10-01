@@ -176,10 +176,6 @@ main {
 }
 
 .content {
-	flex: 1;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -234,5 +230,43 @@ canvas {
 	transform: translateY(2px);
 }
 .ui-controls #roll-btn:hover {
+	background-color: #3737af;
+}
+
+/* Add this at the end of your base.css file */
+
+.night-mode {
+	background-color: #111;
+	color: #fff;
+}
+
+.night-mode button {
+	background-color: #333;
+	color: #fff;
+	border: 1px solid #555;
+}
+
+.night-mode button:hover {
+	background-color: #444;
+}
+
+.ui-controls #night-mode-btn {
+	background-color: #273e9a;
+	font-weight: bold;
+	color: #ffffff;
+	border: none;
+	padding: 1em 1.5em;
+	border-radius: 1.5em;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	margin: 2em 0 0 0;
+	transition: background-color 0.2s, transform 0.1s;
+	pointer-events: auto;
+}
+.ui-controls #night-mode-btn:active {
+	transform: translateY(2px);
+}
+.ui-controls #night-mode-btn:hover {
 	background-color: #3737af;
 }

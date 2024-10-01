@@ -7,9 +7,11 @@ import { TextureLoader } from 'three';
 const canvasEl = document.querySelector('#canvas');
 const scoreResult = document.querySelector('#score-result');
 const rollBtn = document.querySelector('#roll-btn');
+const nightModeBtn = document.querySelector('#night-mode-btn');
 
 let renderer, scene, camera, diceMesh, physicsWorld;
 const textureLoader = new TextureLoader();
+let isNightMode = false;
 
 const diceTextures1 = [
     'img/dice1_69.svg',
@@ -62,6 +64,7 @@ initScene();
 window.addEventListener('resize', updateSceneSize);
 window.addEventListener('dblclick', throwDice);
 rollBtn.addEventListener('click', throwDice);
+nightModeBtn.addEventListener('click', toggleNightMode);
 
 function initScene() {
 
@@ -91,6 +94,9 @@ function initScene() {
     topLight.shadow.camera.near = 5;
     topLight.shadow.camera.far = 400;
     scene.add(topLight);
+    
+    // Store lights for night mode toggle
+    window.lights = { ambientLight, topLight };
     
     createFloor();
     const diceMesh1 = createDiceMesh(diceTextures1);
@@ -358,3 +364,19 @@ function checkDiceMaterials() {
 
 // Call this function after your dice are created
 checkDiceMaterials();
+
+function toggleNightMode() {
+    isNightMode = !isNightMode;
+    
+    if (isNightMode) {
+        document.body.classList.add('night-mode');
+        window.lights.ambientLight.intensity = 0.3;  // Increased from 0.2
+        window.lights.topLight.intensity = 0.3;  // Increased from 0.2
+        scene.background = new THREE.Color(0x222222);  // Lighter background color
+    } else {
+        document.body.classList.remove('night-mode');
+        window.lights.ambientLight.intensity = 0.5;
+        window.lights.topLight.intensity = 0.5;
+        scene.background = null;
+    }
+}
