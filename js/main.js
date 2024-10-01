@@ -330,11 +330,20 @@ function throwDice() {
         d.body.quaternion.copy(d.mesh.quaternion);
 
         // Adjust the force applied to the dice
-        const force = 0.5 + 0.8 * Math.random();
+        const force = 3 + 3 * Math.random(); // Increased base force and randomness
+        const upwardForce = 2 + 2 * Math.random(); // Add an upward component
         d.body.applyImpulse(
-            new CANNON.Vec3(-force, force * 0.6, 0),
+            new CANNON.Vec3(-force, upwardForce, Math.random() - 0.5), // Add some random z-direction force
             new CANNON.Vec3(0, 0, .02)
         );
+
+        // Add some random torque for more interesting spins
+        const torque = new CANNON.Vec3(
+            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 2
+        );
+        d.body.torque.set(torque.x, torque.y, torque.z);
 
         d.body.allowSleep = true;
     });
