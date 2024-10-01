@@ -13,6 +13,9 @@ let renderer, scene, camera, diceMesh, physicsWorld;
 const textureLoader = new TextureLoader();
 let isNightMode = false;
 
+// Add this near the top of the file, with other global variables
+let nudgeTimeout;
+
 const diceTextures1 = [
     'img/dice1_69.svg',
     'img/dice1_bj.svg',
@@ -35,6 +38,10 @@ const diceTextures2 = [
 const diceWords3 = ['slowly', 'quickly', 'gently', 'roughly', 'teasingly', 'intensely'];
 const diceWordsMapped3 = ['gently', 'slowly', 'teasingly', 'intensely', 'quickly', 'roughly'];
 
+// Add this new array for the time durations
+const diceWords4 = ['30 secs', '60 secs', '90 secs', '30 secs', '60 secs', '90 secs'];
+const diceWordsMapped4 = ['for 90 seconds', 'for 30 seconds', 'for 60 seconds', 'for 90 seconds', 'for 60 seconds', 'for 30 seconds'];
+
 const diceWords1 = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
 const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the shower', 'on a couch', 'on the floor'];
 
@@ -53,7 +60,7 @@ function loadTexture(url, index) {
 }
 
 const params = {
-    numberOfDice: 3, // Change this to 3
+    numberOfDice: 4, // Change this to 4
     segments: 40,
     edgeRadius: .07,
     notchRadius: .12,
@@ -61,11 +68,9 @@ const params = {
 };
 
 const diceArray = [];
-
-let diceResults = ['', '', '']; // Add a third empty string
-let diceSettled = [false, false, false]; // Add a third false value
-let nudgeTimeout;
-let nudgeAttempts = [0, 0, 0]; // Update to three zeros
+let diceResults = ['', '', '', '']; // Add a fourth empty string
+let diceSettled = [false, false, false, false]; // Add a fourth false value
+let nudgeAttempts = [0, 0, 0, 0]; // Update to four zeros
 const MAX_NUDGE_ATTEMPTS = 3;
 const NUDGE_INTERVAL = 2000; // 2 seconds
 const INITIAL_SETTLE_TIME = 5000; // 5 seconds
@@ -113,11 +118,13 @@ function initScene() {
     createFloor();
     const diceMesh1 = createDiceMesh(diceTextures1);
     const diceMesh2 = createDiceMesh(diceTextures2);
-    const diceMesh3 = createTextDiceMesh(diceWords3);
+    const diceMesh3 = createTextDiceMesh(diceWords3, '#B4A6AB');
+    const diceMesh4 = createTextDiceMesh(diceWords4, '#E3E2A0');
 
     diceArray.push(createDice(diceMesh1, 0));
     diceArray.push(createDice(diceMesh2, 1));
     diceArray.push(createDice(diceMesh3, 2));
+    diceArray.push(createDice(diceMesh4, 3)); // Add this line
 
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
@@ -301,7 +308,9 @@ function getDiceScore(diceBody) {
 }
 
 function setDiceResult(score, index) {
-    const words = index === 0 ? diceWords1 : (index === 1 ? diceWords2 : diceWordsMapped3);
+    const words = index === 0 ? diceWords1 : 
+                  (index === 1 ? diceWords2 : 
+                  (index === 2 ? diceWordsMapped3 : diceWordsMapped4));
     diceResults[index] = words[score - 1] || '';
     diceSettled[index] = true;
     updateScoreDisplay();
@@ -336,9 +345,9 @@ function updateSceneSize() {
 
 function throwDice() {
     scoreResult.innerHTML = '';
-    diceResults = ['', '', '']; // Update to three empty strings
-    diceSettled = [false, false, false]; // Update to three false values
-    nudgeAttempts = [0, 0, 0]; // Update to three zeros
+    diceResults = ['', '', '', '']; 
+    diceSettled = [false, false, false, false]; 
+    nudgeAttempts = [0, 0, 0, 0]; 
 
     diceArray.forEach((d, dIdx) => {
         d.body.velocity.setZero();
@@ -370,7 +379,10 @@ function throwDice() {
         d.body.allowSleep = true;
     });
 
-    clearTimeout(nudgeTimeout);
+    // Clear any existing timeout before setting a new one
+    if (nudgeTimeout) {
+        clearTimeout(nudgeTimeout);
+    }
     nudgeTimeout = setTimeout(() => checkDiceSettled(), INITIAL_SETTLE_TIME);
 }
 
@@ -464,15 +476,15 @@ function toggleNightMode() {
     }
 }
 
-// Add this new function to create a text-based dice mesh
-function createTextDiceMesh(words) {
+// Modify the createTextDiceMesh function to accept a background color
+function createTextDiceMesh(words, backgroundColor) {
     const boxGeometry = createBoxGeometry();
     const materials = words.map(word => {
         const canvas = document.createElement('canvas');
         canvas.width = 128;
         canvas.height = 128;
         const context = canvas.getContext('2d');
-        context.fillStyle = '#ffffff';
+        context.fillStyle = backgroundColor || '#ffffff'; // Use the provided background color or default to white
         context.fillRect(0, 0, 128, 128);
         context.font = 'bold 24px Arial';
         context.fillStyle = '#000000';
