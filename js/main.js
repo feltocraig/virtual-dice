@@ -31,6 +31,10 @@ const diceTextures2 = [
     'img/dice2_shower.svg',
 ].map(loadTexture);
 
+// Remove the diceTextures3 array and replace it with a words array
+const diceWords3 = ['slowly', 'quickly', 'gently', 'roughly', 'teasingly', 'intensely'];
+const diceWordsMapped3 = ['gently', 'slowly', 'teasingly', 'intensely', 'quickly', 'roughly'];
+
 const diceWords1 = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
 const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the shower', 'on a couch', 'on the floor'];
 
@@ -49,7 +53,7 @@ function loadTexture(url, index) {
 }
 
 const params = {
-    numberOfDice: 2,
+    numberOfDice: 3, // Change this to 3
     segments: 40,
     edgeRadius: .07,
     notchRadius: .12,
@@ -58,10 +62,10 @@ const params = {
 
 const diceArray = [];
 
-let diceResults = ['', ''];
-let diceSettled = [false, false];
+let diceResults = ['', '', '']; // Add a third empty string
+let diceSettled = [false, false, false]; // Add a third false value
 let nudgeTimeout;
-let nudgeAttempts = [0, 0];
+let nudgeAttempts = [0, 0, 0]; // Update to three zeros
 const MAX_NUDGE_ATTEMPTS = 3;
 const NUDGE_INTERVAL = 2000; // 2 seconds
 const INITIAL_SETTLE_TIME = 5000; // 5 seconds
@@ -109,9 +113,11 @@ function initScene() {
     createFloor();
     const diceMesh1 = createDiceMesh(diceTextures1);
     const diceMesh2 = createDiceMesh(diceTextures2);
+    const diceMesh3 = createTextDiceMesh(diceWords3);
 
     diceArray.push(createDice(diceMesh1, 0));
     diceArray.push(createDice(diceMesh2, 1));
+    diceArray.push(createDice(diceMesh3, 2));
 
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
@@ -295,7 +301,7 @@ function getDiceScore(diceBody) {
 }
 
 function setDiceResult(score, index) {
-    const words = index === 0 ? diceWords1 : diceWords2;
+    const words = index === 0 ? diceWords1 : (index === 1 ? diceWords2 : diceWordsMapped3);
     diceResults[index] = words[score - 1] || '';
     diceSettled[index] = true;
     updateScoreDisplay();
@@ -330,9 +336,9 @@ function updateSceneSize() {
 
 function throwDice() {
     scoreResult.innerHTML = '';
-    diceResults = ['', ''];
-    diceSettled = [false, false];
-    nudgeAttempts = [0, 0];
+    diceResults = ['', '', '']; // Update to three empty strings
+    diceSettled = [false, false, false]; // Update to three false values
+    nudgeAttempts = [0, 0, 0]; // Update to three zeros
 
     diceArray.forEach((d, dIdx) => {
         d.body.velocity.setZero();
@@ -456,4 +462,34 @@ function toggleNightMode() {
         window.lights.topLight.intensity = 0.5;
         scene.background = null;
     }
+}
+
+// Add this new function to create a text-based dice mesh
+function createTextDiceMesh(words) {
+    const boxGeometry = createBoxGeometry();
+    const materials = words.map(word => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const context = canvas.getContext('2d');
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, 128, 128);
+        context.font = 'bold 24px Arial';
+        context.fillStyle = '#000000';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(word, 64, 64);
+        
+        const texture = new THREE.CanvasTexture(canvas);
+        return new THREE.MeshStandardMaterial({ 
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide,
+        });
+    });
+    
+    const diceMesh = new THREE.Mesh(boxGeometry, materials);
+    diceMesh.castShadow = true;
+    
+    return diceMesh;
 }
