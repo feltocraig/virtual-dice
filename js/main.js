@@ -96,10 +96,10 @@ function initScene() {
     const diceMesh1 = createDiceMesh(diceTextures1);
     const diceMesh2 = createDiceMesh(diceTextures2);
 
-    diceArray.push(createDice(diceMesh1));
-    diceArray.push(createDice(diceMesh2));
+    diceArray.push(createDice(diceMesh1, 0));
+    diceArray.push(createDice(diceMesh2, 1));
 
-    diceArray.forEach(dice => addDiceEvents(dice));
+    diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
     throwDice();
 
@@ -112,8 +112,44 @@ function initPhysics() {
         gravity: new CANNON.Vec3(0, -50, 0),
     })
     physicsWorld.defaultContactMaterial.restitution = .3;
+
+    // Add boundaries
+    addBoundaries();
 }
 
+function addBoundaries() {
+    const boundaryThickness = 1;
+    const boundaryHeight = 10;
+
+    // Create boundaries
+    const leftWall = new CANNON.Body({
+        type: CANNON.Body.STATIC,
+        shape: new CANNON.Box(new CANNON.Vec3(boundaryThickness, boundaryHeight, 10)),
+    });
+    leftWall.position.set(-5, 0, 0);
+    physicsWorld.addBody(leftWall);
+
+    const rightWall = new CANNON.Body({
+        type: CANNON.Body.STATIC,
+        shape: new CANNON.Box(new CANNON.Vec3(boundaryThickness, boundaryHeight, 10)),
+    });
+    rightWall.position.set(5, 0, 0);
+    physicsWorld.addBody(rightWall);
+
+    const backWall = new CANNON.Body({
+        type: CANNON.Body.STATIC,
+        shape: new CANNON.Box(new CANNON.Vec3(10, boundaryHeight, boundaryThickness)),
+    });
+    backWall.position.set(0, 0, -5);
+    physicsWorld.addBody(backWall);
+
+    const frontWall = new CANNON.Body({
+        type: CANNON.Body.STATIC,
+        shape: new CANNON.Box(new CANNON.Vec3(10, boundaryHeight, boundaryThickness)),
+    });
+    frontWall.position.set(0, 0, 5);
+    physicsWorld.addBody(frontWall);
+}
 
 function createFloor() {
     const floor = new THREE.Mesh(
@@ -156,7 +192,7 @@ function createDiceMesh(textures) {
     return diceMesh;
 }
 
-function createDice(diceMesh) {
+function createDice(diceMesh, index) {
     const mesh = diceMesh.clone();
     scene.add(mesh);
 
@@ -167,12 +203,11 @@ function createDice(diceMesh) {
     });
     physicsWorld.addBody(body);
 
-    return {mesh, body};
+    return {mesh, body, index};
 }
 
-function addDiceEvents(dice) {
+function addDiceEvents(dice, diceIndex) {
     dice.body.addEventListener('sleep', (e) => {
-
         dice.body.allowSleep = false;
 
         const euler = new CANNON.Vec3();
@@ -184,33 +219,37 @@ function addDiceEvents(dice) {
         let isMinusHalfPi = (angle) => Math.abs(.5 * Math.PI + angle) < eps;
         let isPiOrMinusPi = (angle) => (Math.abs(Math.PI - angle) < eps || Math.abs(Math.PI + angle) < eps);
 
+        let score;
 
         if (isZero(euler.z)) {
             if (isZero(euler.x)) {
-                showRollResults(1);
+                score = 1;
             } else if (isHalfPi(euler.x)) {
-                showRollResults(4);
+                score = 4;
             } else if (isMinusHalfPi(euler.x)) {
-                showRollResults(3);
+                score = 3;
             } else if (isPiOrMinusPi(euler.x)) {
-                showRollResults(6);
+                score = 6;
             } else {
                 // landed on edge => wait to fall on side and fire the event again
                 dice.body.allowSleep = true;
+                return;
             }
         } else if (isHalfPi(euler.z)) {
-            showRollResults(2);
+            score = 2;
         } else if (isMinusHalfPi(euler.z)) {
-            showRollResults(5);
+            score = 5;
         } else {
             // landed on edge => wait to fall on side and fire the event again
             dice.body.allowSleep = true;
+            return;
         }
+
+        showRollResults(score, diceIndex);
     });
 }
 
-function showRollResults(score) {
-    const diceIndex = scoreResult.innerHTML === '' ? 0 : 1;
+function showRollResults(score, diceIndex) {
     const words = diceIndex === 0 ? diceWords1 : diceWords2;
     const result = words[score - 1];
 
