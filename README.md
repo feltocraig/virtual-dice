@@ -1,8 +1,4 @@
-# Dice roller with Three.js and cannon-es
-
-Demo for the tutorial on how to code a dice cube and realistic dice roller
-
-![Box preview](./preview/dice-preview.gif)
+# Based on
 
 [Article on Codrops](https://tympanus.net/codrops/?p=69521)
 
@@ -23,23 +19,5 @@ The page is using the following libs:
 
 Both tools are added as JS modules via CDN with import map. Other installation options are available (see the links above)
 
-## Misc
-
-Follow Ksenia: [Twitter](https://twitter.com/uuuuuulala), [Codepen](https://codepen.io/ksenia-k), [website](https://ksenia-k.com/)
-
-Follow Codrops: [Twitter](http://www.twitter.com/codrops), [Facebook](http://www.facebook.com/codrops)
-, [GitHub](https://github.com/codrops), [Instagram](https://www.instagram.com/codropsss/)
-
-## License
-
-[MIT](LICENSE)
-
-Made with :blue_heart:  by [Codrops](http://www.codrops.com)
-
-
-
-
-
-
-
-SVGS - https://thenounproject.com/
+## SVGS
+https://thenounproject.com/
