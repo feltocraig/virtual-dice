@@ -9,6 +9,8 @@
 		<meta name="author" content="Codrops" />
 		<link rel="shortcut icon" href="favicon.ico">
 		<link rel="stylesheet" type="text/css" href="css/base.css" />
+		<!-- Add this line to include Font Awesome icons -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 		<script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
 		<script src="//tympanus.net/codrops/adpacks/analytics.js"></script>
 	</head>
@@ -16,10 +18,13 @@
 		<main>
 			<div class="content">
 				<canvas id="canvas"></canvas>
+				<button id="night-mode-btn" aria-label="Toggle night mode">
+					<i class="fas fa-sun"></i>
+					<i class="fas fa-moon"></i>
+				</button>
 				<div class="ui-controls">
-					<div class="score">Score: <span id="score-result"></span></div>
-					<button id="roll-btn">Throw the dice</button>
-					<button id="night-mode-btn">Toggle Night Mode</button>
+					<div class="score">Combo: <span id="score-result"></span></div>
+					<button id="roll-btn">Throw Dice</button>
 				</div>
 			</div>
 		</main>
