@@ -31,8 +31,8 @@ const diceTextures2 = [
     'img/dice2_shower.svg',
 ].map(loadTexture);
 
-const diceWords1 = ['cowgirl', '69', 'eat out', 'legs in air', 'blow job', 'doggy'];
-const diceWords2 = ['counter', 'bed', 'kitchen', 'shower', 'couch', 'floor'];
+const diceWords1 = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
+const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the shower', 'on a couch', 'on the floor'];
 
 function loadTexture(url, index) {
     return textureLoader.load(
@@ -296,10 +296,10 @@ function showRollResults(score, diceIndex) {
     const words = diceIndex === 0 ? diceWords1 : diceWords2;
     const result = words[score - 1];
 
-    if (scoreResult.innerHTML === '') {
+    if (diceIndex === 0) {
         scoreResult.innerHTML = result;
     } else {
-        scoreResult.innerHTML += ' + ' + result;
+        scoreResult.innerHTML += ' ' + result;
     }
 }
 
