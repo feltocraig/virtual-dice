@@ -173,6 +173,7 @@ function createFloor() {
 }
 
 function createDiceMesh(textures) {
+    const boxGeometry = createBoxGeometry();
     const materials = textures.map((texture, index) => {
         return new THREE.MeshStandardMaterial({ 
             map: texture,
@@ -182,14 +183,50 @@ function createDiceMesh(textures) {
         });
     });
     
-    console.log('Materials created:', materials);
-    
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const diceMesh = new THREE.Mesh(geometry, materials);
-    
+    const diceMesh = new THREE.Mesh(boxGeometry, materials);
     diceMesh.castShadow = true;
     
     return diceMesh;
+}
+
+function createBoxGeometry() {
+    let boxGeometry = new THREE.BoxGeometry(1, 1, 1, params.segments, params.segments, params.segments);
+
+    const positionAttr = boxGeometry.attributes.position;
+    const subCubeHalfSize = .5 - params.edgeRadius;
+
+    for (let i = 0; i < positionAttr.count; i++) {
+        let position = new THREE.Vector3().fromBufferAttribute(positionAttr, i);
+
+        const subCube = new THREE.Vector3(Math.sign(position.x), Math.sign(position.y), Math.sign(position.z)).multiplyScalar(subCubeHalfSize);
+        const addition = new THREE.Vector3().subVectors(position, subCube);
+
+        if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
+            addition.normalize().multiplyScalar(params.edgeRadius);
+            position = subCube.add(addition);
+        } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize) {
+            addition.z = 0;
+            addition.normalize().multiplyScalar(params.edgeRadius);
+            position.x = subCube.x + addition.x;
+            position.y = subCube.y + addition.y;
+        } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
+            addition.y = 0;
+            addition.normalize().multiplyScalar(params.edgeRadius);
+            position.x = subCube.x + addition.x;
+            position.z = subCube.z + addition.z;
+        } else if (Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
+            addition.x = 0;
+            addition.normalize().multiplyScalar(params.edgeRadius);
+            position.y = subCube.y + addition.y;
+            position.z = subCube.z + addition.z;
+        }
+
+        positionAttr.setXYZ(i, position.x, position.y, position.z);
+    }
+
+    boxGeometry.computeVertexNormals();
+
+    return boxGeometry;
 }
 
 function createDice(diceMesh, index) {
