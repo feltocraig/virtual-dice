@@ -58,6 +58,14 @@ const params = {
 
 const diceArray = [];
 
+let diceResults = ['', ''];
+let diceSettled = [false, false];
+let nudgeTimeout;
+let nudgeAttempts = [0, 0];
+const MAX_NUDGE_ATTEMPTS = 3;
+const NUDGE_INTERVAL = 2000; // 2 seconds
+const INITIAL_SETTLE_TIME = 5000; // 5 seconds
+
 initPhysics();
 initScene();
 
@@ -118,6 +126,7 @@ function initPhysics() {
         gravity: new CANNON.Vec3(0, -50, 0),
     })
     physicsWorld.defaultContactMaterial.restitution = .3;
+    physicsWorld.defaultContactMaterial.friction = 0.5; // Add friction
 
     // Add boundaries
     addBoundaries();
@@ -242,64 +251,62 @@ function createDice(diceMesh, index) {
     const body = new CANNON.Body({
         mass: 1,
         shape: new CANNON.Box(new CANNON.Vec3(.5, .5, .5)),
-        sleepTimeLimit: .1
+        sleepTimeLimit: .1,
+        angularDamping: 0.3, // Add angular damping
+        linearDamping: 0.3   // Add linear damping
     });
     physicsWorld.addBody(body);
 
     return {mesh, body, index};
 }
 
-function addDiceEvents(dice, diceIndex) {
+function addDiceEvents(dice, index) {
     dice.body.addEventListener('sleep', (e) => {
-        dice.body.allowSleep = false;
-
-        const euler = new CANNON.Vec3();
-        e.target.quaternion.toEuler(euler);
-
-        const eps = .1;
-        let isZero = (angle) => Math.abs(angle) < eps;
-        let isHalfPi = (angle) => Math.abs(angle - .5 * Math.PI) < eps;
-        let isMinusHalfPi = (angle) => Math.abs(.5 * Math.PI + angle) < eps;
-        let isPiOrMinusPi = (angle) => (Math.abs(Math.PI - angle) < eps || Math.abs(Math.PI + angle) < eps);
-
-        let score;
-
-        if (isZero(euler.z)) {
-            if (isZero(euler.x)) {
-                score = 1;
-            } else if (isHalfPi(euler.x)) {
-                score = 4;
-            } else if (isMinusHalfPi(euler.x)) {
-                score = 3;
-            } else if (isPiOrMinusPi(euler.x)) {
-                score = 6;
-            } else {
-                // landed on edge => wait to fall on side and fire the event again
-                dice.body.allowSleep = true;
-                return;
+        if (!diceSettled[index]) {
+            const score = getDiceScore(e.target);
+            if (score !== null) {
+                setDiceResult(score, index);
             }
-        } else if (isHalfPi(euler.z)) {
-            score = 2;
-        } else if (isMinusHalfPi(euler.z)) {
-            score = 5;
-        } else {
-            // landed on edge => wait to fall on side and fire the event again
-            dice.body.allowSleep = true;
-            return;
         }
-
-        showRollResults(score, diceIndex);
     });
 }
 
-function showRollResults(score, diceIndex) {
-    const words = diceIndex === 0 ? diceWords1 : diceWords2;
-    const result = words[score - 1];
+function getDiceScore(diceBody) {
+    const euler = new CANNON.Vec3();
+    diceBody.quaternion.toEuler(euler);
 
-    if (diceIndex === 0) {
-        scoreResult.innerHTML = result;
-    } else {
-        scoreResult.innerHTML += ' ' + result;
+    const eps = .1;
+    let isZero = (angle) => Math.abs(angle) < eps;
+    let isHalfPi = (angle) => Math.abs(angle - .5 * Math.PI) < eps;
+    let isMinusHalfPi = (angle) => Math.abs(.5 * Math.PI + angle) < eps;
+    let isPiOrMinusPi = (angle) => (Math.abs(Math.PI - angle) < eps || Math.abs(Math.PI + angle) < eps);
+
+    if (isZero(euler.z)) {
+        if (isZero(euler.x)) return 1;
+        if (isHalfPi(euler.x)) return 4;
+        if (isMinusHalfPi(euler.x)) return 3;
+        if (isPiOrMinusPi(euler.x)) return 6;
+    } else if (isHalfPi(euler.z)) {
+        return 2;
+    } else if (isMinusHalfPi(euler.z)) {
+        return 5;
+    }
+    return null; // Dice is on an edge or corner
+}
+
+function setDiceResult(score, index) {
+    const words = index === 0 ? diceWords1 : diceWords2;
+    diceResults[index] = words[score - 1] || '';
+    diceSettled[index] = true;
+    updateScoreDisplay();
+}
+
+function updateScoreDisplay() {
+    scoreResult.innerHTML = diceResults.join(' ');
+    console.log(`Updated score: "${scoreResult.innerHTML}"`);
+    if (diceSettled.every(Boolean)) {
+        console.log("All dice have settled.");
+        clearTimeout(nudgeTimeout);
     }
 }
 
@@ -323,6 +330,9 @@ function updateSceneSize() {
 
 function throwDice() {
     scoreResult.innerHTML = '';
+    diceResults = ['', ''];
+    diceSettled = [false, false];
+    nudgeAttempts = [0, 0];
 
     diceArray.forEach((d, dIdx) => {
         d.body.velocity.setZero();
@@ -336,23 +346,90 @@ function throwDice() {
         d.body.quaternion.copy(d.mesh.quaternion);
 
         // Adjust the force applied to the dice
-        const force = 3 + 3 * Math.random(); // Increased base force and randomness
-        const upwardForce = 2 + 2 * Math.random(); // Add an upward component
+        const force = 3 + 2 * Math.random(); // Slightly reduced randomness
+        const upwardForce = 2 + Math.random(); // Reduced upward force
         d.body.applyImpulse(
-            new CANNON.Vec3(-force, upwardForce, Math.random() - 0.5), // Add some random z-direction force
+            new CANNON.Vec3(-force, upwardForce, (Math.random() - 0.5) * 0.5), // Reduced z-direction force
             new CANNON.Vec3(0, 0, .02)
         );
 
-        // Add some random torque for more interesting spins
+        // Add some random torque for more interesting spins, but with less intensity
         const torque = new CANNON.Vec3(
-            (Math.random() - 0.5) * 2,
-            (Math.random() - 0.5) * 2,
-            (Math.random() - 0.5) * 2
+            (Math.random() - 0.5) * 1.5,
+            (Math.random() - 0.5) * 1.5,
+            (Math.random() - 0.5) * 1.5
         );
         d.body.torque.set(torque.x, torque.y, torque.z);
 
         d.body.allowSleep = true;
     });
+
+    clearTimeout(nudgeTimeout);
+    nudgeTimeout = setTimeout(() => checkDiceSettled(), INITIAL_SETTLE_TIME);
+}
+
+function checkDiceSettled() {
+    diceArray.forEach((dice, index) => {
+        if (!diceSettled[index]) {
+            if (nudgeAttempts[index] < MAX_NUDGE_ATTEMPTS) {
+                console.log(`Nudging dice ${index + 1}. Attempt: ${nudgeAttempts[index] + 1}`);
+                nudgeDice(dice);
+                nudgeAttempts[index]++;
+                setTimeout(() => checkSingleDice(index), NUDGE_INTERVAL);
+            } else {
+                console.log(`Forcing result for dice ${index + 1}`);
+                forceSettleDice(dice, index);
+            }
+        }
+    });
+}
+
+function checkSingleDice(index) {
+    if (!diceSettled[index]) {
+        const score = getDiceScore(diceArray[index].body);
+        if (score !== null) {
+            setDiceResult(score, index);
+        } else {
+            checkDiceSettled();
+        }
+    }
+}
+
+function nudgeDice(dice) {
+    const nudgeForce = 5 + Math.random() * 5;
+    const randomDirection = new CANNON.Vec3(
+        (Math.random() - 0.5) * 2,
+        Math.abs(Math.random()),
+        (Math.random() - 0.5) * 2
+    ).unit();
+
+    dice.body.applyImpulse(
+        randomDirection.scale(nudgeForce, randomDirection),
+        dice.body.position
+    );
+
+    dice.body.allowSleep = false;
+    setTimeout(() => { dice.body.allowSleep = true; }, 100);
+}
+
+function forceSettleDice(dice, index) {
+    const forcedScore = Math.floor(Math.random() * 6) + 1;
+    setDiceResult(forcedScore, index);
+    updateDiceMeshRotation(dice, forcedScore);
+}
+
+function updateDiceMeshRotation(dice, score) {
+    // Set the rotation of the dice mesh based on the score
+    // This is a simplified version; you might need to adjust these rotations
+    switch(score) {
+        case 1: dice.mesh.rotation.set(0, 0, 0); break;
+        case 2: dice.mesh.rotation.set(0, 0, Math.PI / 2); break;
+        case 3: dice.mesh.rotation.set(-Math.PI / 2, 0, 0); break;
+        case 4: dice.mesh.rotation.set(Math.PI / 2, 0, 0); break;
+        case 5: dice.mesh.rotation.set(0, 0, -Math.PI / 2); break;
+        case 6: dice.mesh.rotation.set(Math.PI, 0, 0); break;
+    }
+    dice.body.quaternion.copy(dice.mesh.quaternion);
 }
 
 // Add this function to your render loop or call it after scene initialization
