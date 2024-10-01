@@ -370,9 +370,9 @@ function toggleNightMode() {
     
     if (isNightMode) {
         document.body.classList.add('night-mode');
-        window.lights.ambientLight.intensity = 0.3;  // Increased from 0.2
-        window.lights.topLight.intensity = 0.3;  // Increased from 0.2
-        scene.background = new THREE.Color(0x222222);  // Lighter background color
+        window.lights.ambientLight.intensity = 0.3;
+        window.lights.topLight.intensity = 0.4;
+        scene.background = new THREE.Color(0x202030);  // Dark blue-gray background
     } else {
         document.body.classList.remove('night-mode');
         window.lights.ambientLight.intensity = 0.5;

@@ -20,6 +20,7 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	overflow: hidden;
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Page Loader */
@@ -246,18 +247,47 @@ canvas {
 /* Add this at the end of your base.css file */
 
 .night-mode {
-	background-color: #111;
-	color: #fff;
+	background-color: #202030;  /* Dark blue-gray background */
+	color: #e0e0e0;  /* Light gray text */
 }
 
 .night-mode button {
-	background-color: #333;
-	color: #fff;
-	border: 1px solid #555;
+	background-color: #3a3a4a;  /* Slightly lighter than the background */
+	color: #e0e0e0;
+	border: 1px solid #4a4a5a;
 }
 
 .night-mode button:hover {
-	background-color: #444;
+	background-color: #4a4a5a;
+}
+
+.night-mode .ui-controls {
+	background-color: rgba(40, 40, 60, 0.8);  /* Slightly transparent dark blue-gray */
+}
+
+.night-mode #night-mode-btn .fa-sun {
+	display: inline-block;
+}
+
+.night-mode #night-mode-btn .fa-moon {
+	display: none;
+}
+
+#night-mode-btn .fa-sun {
+	display: none;
+}
+
+#night-mode-btn .fa-moon {
+	display: inline-block;
+}
+
+.night-mode #night-mode-btn .fa-sun {
+	display: inline-block;
+	color: #FFD700;
+}
+
+.night-mode #night-mode-btn .fa-moon {
+	display: none;
 }
 
 #night-mode-btn {
@@ -281,25 +311,4 @@ canvas {
 
 #night-mode-btn:hover {
 	background-color: rgba(100, 100, 100, 0.4);
-}
-
-#night-mode-btn .fa-sun {
-	display: none;
-}
-
-#night-mode-btn .fa-moon {
-	display: inline-block;
-}
-
-.night-mode #night-mode-btn .fa-sun {
-	display: inline-block;
-	color: #FFD700;
-}
-
-.night-mode #night-mode-btn .fa-moon {
-	display: none;
-}
-
-.night-mode .ui-controls {
-	background-color: rgba(40, 40, 40, 0.8);
 }
