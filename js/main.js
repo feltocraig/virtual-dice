@@ -44,8 +44,32 @@ const diceWordsMapped3 = ['gently', 'slowly', 'teasingly', 'intensely', 'quickly
 const diceWords4 = ['30 secs', '60 secs', '90 secs', '30 secs', '60 secs', '90 secs'];
 const diceWordsMapped4 = ['for 90 seconds', 'for 30 seconds', 'for 60 seconds', 'for 90 seconds', 'for 60 seconds', 'for 30 seconds'];
 
+//Cowgirl, Reverse Cowgirl, Spooning
 const diceWords1 = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
-const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the shower', 'on a couch', 'on the floor'];
+const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the bathroom', 'on a couch', 'on the floor'];
+
+// Girl Related
+// 1. Oral Sex 2. Clitoral Stimulation 3. G-Spot Stimulation 4. Anal Play 5. Breast Play
+// 6. Spanking 7. Bondage 8. Role Play 9. Erotic Massage 10. Sensory Deprivation
+// Girl Toys
+// 1. Vibrator 2. Dildo 3. Nipple Clamps 4. Anal Plug 5. Strap-On 
+// 6. Blindfold 7. Handcuffs 8. Bondage Tape 9. Feather Tickler 10. Whisper Stimulator
+// 11. Clitoral Suction Toy 12. Spanking Paddle (flogger)
+
+// Guy Related
+// 1. Hand Job 2. Blow Job 3. Prostate Stimulation 4. Testicle Stimulation 5. Spanking
+// 6. Bondage7. Role Play 8. Erotic Massage 9. Sensory Deprivation 10. Edging
+// Guy Toys
+// 1. Masturbator 2. Prostate Massager 3. Cock Ring 4. Testicle Stimulation Toy 5. Vibrating Penis Sleeve
+// 6. Anal Plug 7. Spanking Paddle 8. Bondage Gear 9. Erotic Massage Oil 10. Edging Toy
+// 11. Blindfold 12. Handcuffs 13. Feather Tickler
+
+// 1. Foreplay Dice: This dice could include suggestions for different types of foreplay, such as kissing, touching, or teasing.
+// 2. Role Play Dice: This dice could include suggestions for different types of role play scenarios, such as doctor and patient, teacher and student, or superhero and villain.
+// 3. Fantasy Dice: This dice could include suggestions for different types of sexual fantasies, such as being tied up, having a threesome, or having sex in a public place.
+// 4. Communication Dice: This dice could include suggestions for different types of communication during sex, such as dirty talk, moaning, or giving feedback.
+// 5. Sensory Dice: This dice could include suggestions for different types of sensory experiences during sex, such as blindfolding, using ice or heat, or using flavored lube.
+
 
 function loadTexture(url, index) {
     return textureLoader.load(
