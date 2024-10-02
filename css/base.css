@@ -8,8 +8,6 @@
 	font-size: 16px;
 	--color-text: #000;
 	--color-bg: #ddd;
-	--color-link: #888;
-	--color-link-hover: #000;
 }
 
 body {
@@ -23,157 +21,10 @@ body {
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Page Loader */
-.js .loading::before,
-.js .loading::after {
-	content: '';
-	position: fixed;
-	z-index: 1000;
-}
-
-.js .loading::before {
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: var(--color-bg);
-}
-
-.js .loading::after {
-	top: 50%;
-	left: 50%;
-	width: 60px;
-	height: 60px;
-	margin: -30px 0 0 -30px;
-	border-radius: 50%;
-	opacity: 0.4;
-	background: var(--color-link);
-	animation: loaderAnim 0.7s linear infinite alternate forwards;
-
-}
-
-@keyframes loaderAnim {
-	to {
-		opacity: 1;
-		transform: scale3d(0.5,0.5,1);
-	}
-}
-
-a {
-	text-decoration: none;
-	color: var(--color-link);
-	outline: none;
-	cursor: pointer;
-}
-
-a:hover {
-	color: var(--color-link-hover);
-	outline: none;
-}
-
-/* Better focus styles from https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible */
-a:focus {
-	/* Provide a fallback style for browsers
-	 that don't support :focus-visible */
-	outline: none;
-	background: lightgrey;
-}
-
-a:focus:not(:focus-visible) {
-	/* Remove the focus indicator on mouse-focus for browsers
-	 that do support :focus-visible */
-	background: transparent;
-}
-
-a:focus-visible {
-	/* Draw a very noticeable focus style for
-	 keyboard-focus on browsers that do support
-	 :focus-visible */
-	outline: 2px solid red;
-	background: transparent;
-}
-
 main {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
-}
-
-.unbutton {
-	background: none;
-	border: 0;
-	padding: 0;
-	margin: 0;
-	font: inherit;
-	cursor: pointer;
-}
-
-.unbutton:focus {
-	outline: none;
-}
-
-.frame {
-	color: var(--color-title);
-	padding: 1.5rem;
-	display: grid;
-	grid-template-columns: auto auto 1fr;
-	grid-template-rows: auto;
-	grid-template-areas: 'title prev sponsor';
-	justify-content: start;
-	grid-gap: 2rem;
-	z-index: 1000;
-}
-
-.frame a:not(.frame__title-back) {
-	white-space: nowrap;
-	overflow: hidden;
-	position: relative;
-}
-
-.frame a:not(.frame__title-back)::before {
-	content: '';
-	height: 1px;
-	width: 100%;
-	background: currentColor;
-	position: absolute;
-	top: 90%;
-	transition: transform 0.3s;
-	transform-origin: 0% 50%;
-}
-
-.frame a:not(.frame__title-back):hover::before {
-	transform: scaleX(0);
-	transform-origin: 100% 50%;
-}
-
-.frame__title {
-	grid-area: title;
-	display: flex;
-}
-
-.frame__title-main {
-	font-size: 1rem;
-	margin: 0;
-	font-weight: normal;
-}
-
-.frame__title-back {
-	position: relative;
-	display: flex;
-	align-items: flex-end;
-	margin-bottom: 0.15rem;
-}
-
-.frame__title-back span {
-	display: none;
-}
-
-.frame__title-back svg {
-	fill: currentColor;
-}
-
-.frame__prev {
-	grid-area: prev;
 }
 
 .content {
@@ -395,12 +246,12 @@ canvas {
 }
 
 .night-mode {
-	background-color: #202030;  /* Dark blue-gray background */
-	color: #e0e0e0;  /* Light gray text */
+	background-color: #202030;
+	color: #e0e0e0;
 }
 
 .night-mode button {
-	background-color: #3a3a4a;  /* Slightly lighter than the background */
+	background-color: #3a3a4a;
 	color: #e0e0e0;
 	border: 1px solid #4a4a5a;
 }
@@ -414,8 +265,8 @@ canvas {
 }
 
 .night-mode #score-result {
-	color: #a0b4ff;  /* Lighter blue color for better contrast in night mode */
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);  /* Slightly stronger shadow for night mode */
+	color: #a0b4ff;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .night-mode #roll-btn {
@@ -476,15 +327,6 @@ canvas {
 	background-color: rgba(100, 100, 100, 0.4);
 }
 
-.night-mode #settings-btn {
-	background-color: rgba(122, 143, 211, 0.1);
-	color: #7a8fd3;
-}
-
-.night-mode #settings-btn:hover {
-	background-color: rgba(122, 143, 211, 0.2);
-}
-
 .toggle-container {
     display: flex;
     flex-direction: column;
@@ -497,7 +339,7 @@ canvas {
     display: inline-block;
     width: 60px;
     height: 34px;
-    margin-left: 0; /* Remove any left margin */
+    margin-left: 0;
 }
 
 .toggle input {
@@ -546,7 +388,6 @@ input:checked + .slider:before {
     white-space: nowrap;
 }
 
-/* New styles for vertical layout */
 .toggle-container.vertical {
     width: 100%;
     padding-left: 0;
@@ -575,7 +416,6 @@ input:checked + .slider:before {
     flex-grow: 1;
 }
 
-/* New styles to align toggles with checkboxes */
 .toggle-container.vertical .toggle input {
     position: absolute;
     opacity: 0;

@@ -1,7 +1,6 @@
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { TextureLoader } from 'three';
 
 const canvasEl = document.querySelector('#canvas');
