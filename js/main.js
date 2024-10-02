@@ -194,17 +194,17 @@ function initScene() {
     const diceMesh2 = createDiceMesh(diceTextures2);
     const diceMesh3 = createTextDiceMesh(diceWords3, '#B4A6AB');
     const diceMesh4 = createTextDiceMesh(diceWords4, '#E3E2A0');
-    const diceMesh5 = createTextDiceMesh(diceWords5, '#A0E3E2'); // Add this line
+    const diceMesh5 = createTextDiceMesh(diceWords5, '#A0E3E2');
 
     diceArray.push(createDice(diceMesh1, 0));
     diceArray.push(createDice(diceMesh2, 1));
     diceArray.push(createDice(diceMesh3, 2));
     diceArray.push(createDice(diceMesh4, 3));
-    diceArray.push(createDice(diceMesh5, 4)); // Add this line
+    diceArray.push(createDice(diceMesh5, 4));
 
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
-    throwDice();
+    positionDiceOnFloor(); // Add this line
 
     render();
 }
@@ -443,7 +443,6 @@ function throwDice() {
     nudgeAttempts = [0, 0, 0, 0, 0]; 
 
     diceArray.forEach((d, dIdx) => {
-        // Process the dice if its checkbox is checked
         if ((dIdx === 0 && dice1Checkbox.checked) ||
             (dIdx === 1 && dice2Checkbox.checked) ||
             (dIdx === 2 && dice3Checkbox.checked) || 
@@ -452,14 +451,12 @@ function throwDice() {
             d.body.velocity.setZero();
             d.body.angularVelocity.setZero();
 
-            // Adjust the starting position of the dice
             d.body.position = new CANNON.Vec3(2, dIdx * 0.5 + 3, 0);
             d.mesh.position.copy(d.body.position);
 
             d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
             d.body.quaternion.copy(d.mesh.quaternion);
 
-            // Adjust the force applied to the dice
             const force = 3 + 2 * Math.random();
             const upwardForce = 2 + Math.random();
             d.body.applyImpulse(
@@ -475,19 +472,17 @@ function throwDice() {
             d.body.torque.set(torque.x, torque.y, torque.z);
 
             d.body.allowSleep = true;
-            d.mesh.visible = true;  // Make sure the dice is visible
+            d.mesh.visible = true;
         } else {
-            // If the dice is not being used, hide it and set its position out of view
-            d.body.position.set(0, -100, 0);  // Move it far below the scene
+            d.body.position.set(0, -100, 0);
             d.mesh.position.copy(d.body.position);
             d.body.velocity.setZero();
             d.body.angularVelocity.setZero();
-            d.mesh.visible = false;  // Hide the dice
-            diceSettled[dIdx] = true;  // Consider it "settled" so we don't wait for it
+            d.mesh.visible = false;
+            diceSettled[dIdx] = true;
         }
     });
 
-    // Clear any existing timeout before setting a new one
     if (nudgeTimeout) {
         clearTimeout(nudgeTimeout);
     }
@@ -653,4 +648,33 @@ function createTextDiceMesh(words, backgroundColor) {
     diceMesh.castShadow = true;
     
     return diceMesh;
+}
+
+// Add this new function
+function positionDiceOnFloor() {
+    diceArray.forEach((dice, index) => {
+        const x = (index - 2) * 1.2; // Spread dice horizontally
+        const y = -6.5; // Position just above the floor
+        const z = 0;
+
+        dice.body.position.set(x, y, z);
+        dice.body.quaternion.setFromEuler(
+            Math.random() * Math.PI,
+            Math.random() * Math.PI,
+            Math.random() * Math.PI
+        );
+        dice.body.velocity.set(0, 0, 0);
+        dice.body.angularVelocity.set(0, 0, 0);
+
+        dice.mesh.position.copy(dice.body.position);
+        dice.mesh.quaternion.copy(dice.body.quaternion);
+    });
+
+    // Update the score display
+    diceArray.forEach((dice, index) => {
+        const score = getDiceScore(dice.body);
+        if (score !== null) {
+            setDiceResult(score, index);
+        }
+    });
 }
