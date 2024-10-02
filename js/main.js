@@ -404,8 +404,11 @@ function updateScoreDisplay() {
         dice4Checkbox.checked ? diceResults[3] : ''
     ].filter(result => result !== '');
 
-    scoreResult.innerHTML = activeResults.join(' ');
-    console.log(`Updated score: "${scoreResult.innerHTML}"`);
+    const newScore = activeResults.join(' ');
+    if (scoreResult.innerHTML !== newScore) {
+        scoreResult.innerHTML = newScore;
+        console.log(`Updated score: "${newScore}"`);
+    }
 
     if (diceSettled.every((settled, index) => 
         settled || 
