@@ -593,13 +593,54 @@ function createTextDiceMesh(words, backgroundColor) {
         canvas.width = 128;
         canvas.height = 128;
         const context = canvas.getContext('2d');
-        context.fillStyle = backgroundColor || '#ffffff'; // Use the provided background color or default to white
+        context.fillStyle = backgroundColor || '#ffffff';
         context.fillRect(0, 0, 128, 128);
-        context.font = 'bold 24px Arial';
-        context.fillStyle = '#000000';
+
+        // Set initial font size and parameters
+        let fontSize = 24;
+        const maxWidth = 120;
+        const lineHeight = 1.2;
         context.textAlign = 'center';
         context.textBaseline = 'middle';
-        context.fillText(word, 64, 64);
+
+        // Function to wrap text
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            const lines = [];
+
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    lines.push(line);
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            return lines;
+        }
+
+        // Reduce font size until text fits
+        let lines;
+        do {
+            context.font = `bold ${fontSize}px Arial`;
+            lines = wrapText(context, word, 64, 64, maxWidth, lineHeight);
+            fontSize--;
+        } while (lines.length * fontSize * lineHeight > 120 && fontSize > 10);
+
+        // Draw the wrapped text
+        const totalHeight = lines.length * fontSize * lineHeight;
+        let startY = (128 - totalHeight) / 2 + fontSize / 2;
+
+        context.fillStyle = '#000000';
+        lines.forEach((line, index) => {
+            context.fillText(line.trim(), 64, startY + index * fontSize * lineHeight);
+        });
         
         const texture = new THREE.CanvasTexture(canvas);
         return new THREE.MeshStandardMaterial({ 
