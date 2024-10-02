@@ -95,7 +95,7 @@ function loadTexture(url, index) {
 
 const params = {
     numberOfDice: 5, // Change this to 5
-    segments: 40,
+    segments: 20, // Reduced from 40
     edgeRadius: .07,
     notchRadius: .12,
     notchDepth: .1,
@@ -421,7 +421,9 @@ function updateScoreDisplay() {
 }
 
 function render() {
-    physicsWorld.fixedStep();
+    if (diceArray.some(dice => !dice.body.sleepState)) {
+        physicsWorld.fixedStep();
+    }
 
     for (const dice of diceArray) {
         dice.mesh.position.copy(dice.body.position)
