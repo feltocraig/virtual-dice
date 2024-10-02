@@ -15,6 +15,8 @@ let isNightMode = false;
 
 // Add this near the top of the file, with other global variables
 let nudgeTimeout;
+const dice3Checkbox = document.querySelector('#dice3-checkbox');
+const dice4Checkbox = document.querySelector('#dice4-checkbox');
 
 const diceTextures1 = [
     'img/dice1_69.svg',
@@ -82,6 +84,28 @@ window.addEventListener('resize', updateSceneSize);
 window.addEventListener('dblclick', throwDice);
 rollBtn.addEventListener('click', throwDice);
 nightModeBtn.addEventListener('click', toggleNightMode);
+
+// Get the modal elements
+const modal = document.getElementById('settings-modal');
+const settingsBtn = document.getElementById('settings-btn');
+const closeBtn = document.getElementById('close-modal');
+
+// Open the modal when the settings button is clicked
+settingsBtn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Close the modal when the close button is clicked
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 
 function initScene() {
 
@@ -317,10 +341,15 @@ function setDiceResult(score, index) {
 }
 
 function updateScoreDisplay() {
-    scoreResult.innerHTML = diceResults.join(' ');
+    const activeResults = diceResults.filter((result, index) => 
+        index < 2 || (index === 2 && dice3Checkbox.checked) || (index === 3 && dice4Checkbox.checked)
+    );
+    scoreResult.innerHTML = activeResults.join(' ');
     console.log(`Updated score: "${scoreResult.innerHTML}"`);
-    if (diceSettled.every(Boolean)) {
-        console.log("All dice have settled.");
+    if (diceSettled.every((settled, index) => 
+        settled || index >= 2 && !dice3Checkbox.checked && !dice4Checkbox.checked
+    )) {
+        console.log("All active dice have settled.");
         clearTimeout(nudgeTimeout);
     }
 }
@@ -350,33 +379,44 @@ function throwDice() {
     nudgeAttempts = [0, 0, 0, 0]; 
 
     diceArray.forEach((d, dIdx) => {
-        d.body.velocity.setZero();
-        d.body.angularVelocity.setZero();
+        // Only process the dice if it's one of the first two, or if its checkbox is checked
+        if (dIdx < 2 || (dIdx === 2 && dice3Checkbox.checked) || (dIdx === 3 && dice4Checkbox.checked)) {
+            d.body.velocity.setZero();
+            d.body.angularVelocity.setZero();
 
-        // Adjust the starting position of the dice
-        d.body.position = new CANNON.Vec3(2, dIdx * 0.5 + 3, 0);
-        d.mesh.position.copy(d.body.position);
+            // Adjust the starting position of the dice
+            d.body.position = new CANNON.Vec3(2, dIdx * 0.5 + 3, 0);
+            d.mesh.position.copy(d.body.position);
 
-        d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
-        d.body.quaternion.copy(d.mesh.quaternion);
+            d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
+            d.body.quaternion.copy(d.mesh.quaternion);
 
-        // Adjust the force applied to the dice
-        const force = 3 + 2 * Math.random(); // Slightly reduced randomness
-        const upwardForce = 2 + Math.random(); // Reduced upward force
-        d.body.applyImpulse(
-            new CANNON.Vec3(-force, upwardForce, (Math.random() - 0.5) * 0.5), // Reduced z-direction force
-            new CANNON.Vec3(0, 0, .02)
-        );
+            // Adjust the force applied to the dice
+            const force = 3 + 2 * Math.random();
+            const upwardForce = 2 + Math.random();
+            d.body.applyImpulse(
+                new CANNON.Vec3(-force, upwardForce, (Math.random() - 0.5) * 0.5),
+                new CANNON.Vec3(0, 0, .02)
+            );
 
-        // Add some random torque for more interesting spins, but with less intensity
-        const torque = new CANNON.Vec3(
-            (Math.random() - 0.5) * 1.5,
-            (Math.random() - 0.5) * 1.5,
-            (Math.random() - 0.5) * 1.5
-        );
-        d.body.torque.set(torque.x, torque.y, torque.z);
+            const torque = new CANNON.Vec3(
+                (Math.random() - 0.5) * 1.5,
+                (Math.random() - 0.5) * 1.5,
+                (Math.random() - 0.5) * 1.5
+            );
+            d.body.torque.set(torque.x, torque.y, torque.z);
 
-        d.body.allowSleep = true;
+            d.body.allowSleep = true;
+            d.mesh.visible = true;  // Make sure the dice is visible
+        } else {
+            // If the dice is not being used, hide it and set its position out of view
+            d.body.position.set(0, -100, 0);  // Move it far below the scene
+            d.mesh.position.copy(d.body.position);
+            d.body.velocity.setZero();
+            d.body.angularVelocity.setZero();
+            d.mesh.visible = false;  // Hide the dice
+            diceSettled[dIdx] = true;  // Consider it "settled" so we don't wait for it
+        }
     });
 
     // Clear any existing timeout before setting a new one

@@ -26,11 +26,26 @@
 					<i class="fas fa-moon"></i>
 				</button>
 				<div class="ui-controls">
-					<div class="score">Combo: <span id="score-result"></span></div>
-					<button id="roll-btn">Throw Dice</button>
+					<span id="score-result"></span>
+					<div class="button-container">
+						<button id="roll-btn">Throw Dice</button>
+						<button id="settings-btn" aria-label="Settings">
+							<i class="fas fa-cog"></i>
+						</button>
+					</div>
 				</div>
 			</div>
 		</main>
+		<div id="settings-modal" class="modal">
+			<div class="modal-content">
+				<h2>Dice Settings</h2>
+				<div class="dice-selection">
+					<label><input type="checkbox" id="dice3-checkbox" checked> Use Desriptive Dice</label>
+					<label><input type="checkbox" id="dice4-checkbox" checked> Use Timed Dice</label>
+				</div>
+				<button id="close-modal">Close</button>
+			</div>
+		</div>
 		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
 		<script type="importmap">
 		  {

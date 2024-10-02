@@ -196,7 +196,7 @@ canvas {
 	left: 50%;
 	transform: translateX(-50%);
 	width: 100%;
-	max-width: 300px;
+	max-width: 400px;
 	font-family: inherit;
 	user-select: none;
 	line-height: 1.5;
@@ -211,18 +211,14 @@ canvas {
 	align-items: center;
 }
 
-.score {
-	font-weight: bold;
-}
-
 .ui-controls #score-result {
 	display: inline-block;
 	min-width: 1.8em;
 	color: #d45f2e;
+	font-weight: bold;
+	text-align: center;
 }
-.ui-controls #score-result:after {
-	content: "\200b";
-}
+
 .ui-controls #roll-btn {
 	background-color: #273e9a;
 	font-weight: bold;
@@ -242,6 +238,164 @@ canvas {
 }
 .ui-controls #roll-btn:hover {
 	background-color: #3737af;
+}
+
+.button-container {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+#settings-btn {
+	background-color: rgba(100, 100, 100, 0.2); /* Changed to match night mode icon */
+	color: #000000; /* Changed to black for better contrast */
+	border: none;
+	padding: 0; /* Remove padding */
+	border-radius: 50%; /* Make it circular */
+	cursor: pointer;
+	transition: background-color 0.3s;
+	font-size: 24px; /* Match night mode icon size */
+	width: 40px; /* Set fixed width */
+	height: 40px; /* Set fixed height */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 24px;
+}
+
+#settings-btn:hover {
+	background-color: rgba(100, 100, 100, 0.4); /* Match night mode icon hover */
+}
+
+/* Update the icon size */
+#settings-btn i {
+	font-size: 1em; /* Adjust as needed */
+}
+
+/* Remove this block as it's no longer needed */
+/* Ensure consistent height for both buttons */
+/*
+#roll-btn, #settings-btn {
+	height: 3.5em;
+}
+*/
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1002;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+	background-color: #f8f9fa;
+	margin: 15% auto;
+	padding: 30px;
+	border: none;
+	width: 90%;
+	max-width: 400px;
+	border-radius: 15px;
+	box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.modal h2 {
+	margin-top: 0;
+	color: #273e9a;
+	font-size: 24px;
+	margin-bottom: 20px;
+}
+
+.dice-selection {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	margin-bottom: 25px;
+}
+
+.dice-selection label {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	font-size: 18px;
+	color: #333;
+}
+
+.dice-selection input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 24px;
+	height: 24px;
+	border: 2px solid #273e9a;
+	border-radius: 5px;
+	margin-right: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.dice-selection input[type="checkbox"]:checked::before {
+	content: '\2713';
+	color: #273e9a;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#close-modal {
+	background-color: #273e9a;
+	color: white;
+	border: none;
+	padding: 12px 24px;
+	border-radius: 25px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: bold;
+	transition: background-color 0.3s, transform 0.1s;
+	display: block;
+	width: 100%;
+	margin-top: 20px;
+}
+
+#close-modal:hover {
+	background-color: #3737af;
+}
+
+#close-modal:active {
+	transform: translateY(2px);
+}
+
+.night-mode .modal-content {
+	background-color: #2a2a3a;
+	color: #e0e0e0;
+}
+
+.night-mode .modal h2 {
+	color: #7a8fd3;
+}
+
+.night-mode .dice-selection label {
+	color: #e0e0e0;
+}
+
+.night-mode .dice-selection input[type="checkbox"] {
+	border-color: #7a8fd3;
+}
+
+.night-mode .dice-selection input[type="checkbox"]:checked::before {
+	color: #7a8fd3;
+}
+
+.night-mode #close-modal {
+	background-color: #7a8fd3;
+	color: #202030;
+}
+
+.night-mode #close-modal:hover {
+	background-color: #8a9fe3;
 }
 
 /* Add this at the end of your base.css file */
@@ -310,5 +464,14 @@ canvas {
 }
 
 #night-mode-btn:hover {
+	background-color: rgba(100, 100, 100, 0.4);
+}
+
+.night-mode #settings-btn {
+	background-color: rgba(100, 100, 100, 0.2);
+	color: #e0e0e0;
+}
+
+.night-mode #settings-btn:hover {
 	background-color: rgba(100, 100, 100, 0.4);
 }
