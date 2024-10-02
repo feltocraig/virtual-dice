@@ -234,7 +234,7 @@ canvas {
 	cursor: pointer;
 	margin: 0.5em 0; 
 	transition: all 0.3s ease;
-	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1)
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); 
 	font-size: 1em; 
 }
 
@@ -483,4 +483,112 @@ canvas {
 
 .night-mode #settings-btn:hover {
 	background-color: rgba(122, 143, 211, 0.2);
+}
+
+.toggle-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin-left: 0; /* Remove any left margin */
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.toggle .label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 70px;
+    white-space: nowrap;
+}
+
+/* New styles for vertical layout */
+.toggle-container.vertical {
+    width: 100%;
+    padding-left: 0;
+}
+
+.toggle-container.vertical .toggle {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin-left: 0;
+}
+
+.toggle-container.vertical .slider {
+    position: relative;
+    width: 60px;
+    height: 34px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.toggle-container.vertical .label {
+    position: static;
+    transform: none;
+    left: auto;
+    flex-grow: 1;
+}
+
+/* New styles to align toggles with checkboxes */
+.toggle-container.vertical .toggle input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.toggle-container.vertical .toggle {
+    padding-left: 0;
+    margin-bottom: 10px;
+}
+
+.toggle-container.vertical .slider {
+    left: 0;
 }
