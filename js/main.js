@@ -95,7 +95,7 @@ function loadTexture(url, index) {
 
 const params = {
     numberOfDice: 5, // Change this to 5
-    segments: 20, // Reduced from 40
+    segments: 40,
     edgeRadius: .07,
     notchRadius: .12,
     notchDepth: .1,
@@ -404,11 +404,8 @@ function updateScoreDisplay() {
         dice4Checkbox.checked ? diceResults[3] : ''
     ].filter(result => result !== '');
 
-    const newScore = activeResults.join(' ');
-    if (scoreResult.innerHTML !== newScore) {
-        scoreResult.innerHTML = newScore;
-        console.log(`Updated score: "${newScore}"`);
-    }
+    scoreResult.innerHTML = activeResults.join(' ');
+    console.log(`Updated score: "${scoreResult.innerHTML}"`);
 
     if (diceSettled.every((settled, index) => 
         settled || 
@@ -424,9 +421,7 @@ function updateScoreDisplay() {
 }
 
 function render() {
-    if (diceArray.some(dice => !dice.body.sleepState)) {
-        physicsWorld.fixedStep();
-    }
+    physicsWorld.fixedStep();
 
     for (const dice of diceArray) {
         dice.mesh.position.copy(dice.body.position)
