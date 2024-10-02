@@ -25,7 +25,7 @@ jobs:
       - run: npm install -g html-minifier
 
       # Use CLI tools to minify, overwriting existing files
-      - run: for i in ./js/*.js; do terser $i --compress --mangle -o $i; done
+      - run: for i in ./js/*.js; do terser $i --compress --mangle --mangle-props -o $i; done
       - run: for i in ./css/*.css; do csso $i -o $i; done
       - run: for i in ./*.html; do html-minifier --remove-comments $i -o $i; done
       
