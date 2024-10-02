@@ -204,7 +204,9 @@ function initScene() {
 
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
-    positionDiceOnFloor(); // Add this line
+    updateInitialDiceVisibility(); // Add this line
+
+    positionDiceOnFloor();
 
     render();
 }
@@ -651,30 +653,69 @@ function createTextDiceMesh(words, backgroundColor) {
 }
 
 // Add this new function
-function positionDiceOnFloor() {
+function updateInitialDiceVisibility() {
     diceArray.forEach((dice, index) => {
-        const x = (index - 2) * 1.2; // Spread dice horizontally
-        const y = -6.5; // Position just above the floor
-        const z = 0;
+        const isVisible = (index === 0 && dice1Checkbox.checked) ||
+                          (index === 1 && dice2Checkbox.checked) ||
+                          (index === 2 && dice3Checkbox.checked) ||
+                          (index === 3 && dice4Checkbox.checked) ||
+                          (index === 4 && dice5Checkbox.checked);
+        
+        dice.mesh.visible = isVisible;
+        if (!isVisible) {
+            dice.body.position.set(0, -100, 0); // Move invisible dice out of view
+            dice.mesh.position.copy(dice.body.position);
+        }
+    });
+}
 
-        dice.body.position.set(x, y, z);
-        dice.body.quaternion.setFromEuler(
-            Math.random() * Math.PI,
-            Math.random() * Math.PI,
-            Math.random() * Math.PI
-        );
-        dice.body.velocity.set(0, 0, 0);
-        dice.body.angularVelocity.set(0, 0, 0);
+// Modify the positionDiceOnFloor function
+function positionDiceOnFloor() {
+    const faceRotations = [
+        new CANNON.Quaternion(), // Face 1 up
+        new CANNON.Quaternion().setFromEuler(0, 0, Math.PI / 2), // Face 2 up
+        new CANNON.Quaternion().setFromEuler(-Math.PI / 2, 0, 0), // Face 3 up
+        new CANNON.Quaternion().setFromEuler(Math.PI / 2, 0, 0), // Face 4 up
+        new CANNON.Quaternion().setFromEuler(0, 0, -Math.PI / 2), // Face 5 up
+        new CANNON.Quaternion().setFromEuler(Math.PI, 0, 0) // Face 6 up
+    ];
 
-        dice.mesh.position.copy(dice.body.position);
-        dice.mesh.quaternion.copy(dice.body.quaternion);
+    let visibleDiceCount = 0;
+
+    diceArray.forEach((dice, index) => {
+        if (dice.mesh.visible) {
+            const x = (visibleDiceCount - 2) * 1.2; // Spread visible dice horizontally
+            const y = -6.5; // Position just above the floor
+            const z = 0;
+
+            dice.body.position.set(x, y, z);
+            
+            // Choose a random face to be up
+            const randomFace = Math.floor(Math.random() * 6);
+            dice.body.quaternion.copy(faceRotations[randomFace]);
+
+            dice.body.velocity.set(0, 0, 0);
+            dice.body.angularVelocity.set(0, 0, 0);
+
+            dice.mesh.position.copy(dice.body.position);
+            dice.mesh.quaternion.copy(dice.body.quaternion);
+
+            visibleDiceCount++;
+        }
     });
 
     // Update the score display
     diceArray.forEach((dice, index) => {
-        const score = getDiceScore(dice.body);
-        if (score !== null) {
-            setDiceResult(score, index);
+        if (dice.mesh.visible) {
+            const score = getDiceScore(dice.body);
+            if (score !== null) {
+                setDiceResult(score, index);
+            }
+        } else {
+            diceResults[index] = '';
+            diceSettled[index] = true;
         }
     });
+
+    updateScoreDisplay();
 }
