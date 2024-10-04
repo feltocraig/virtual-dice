@@ -30,6 +30,17 @@ let myShakeEvent;
 const mobileShakeModal = document.getElementById('mobile-shake-modal');
 const gotItBtn = document.getElementById('got-it-btn');
 
+// Add these variables near the top of the file
+let timerInterval;
+let timerDuration;
+let remainingTime;
+let isTimerRunning = false;
+const timerContainer = document.querySelector('.timer-container');
+const timerDisplay = document.querySelector('.timer-display');
+const timerProgressBar = document.querySelector('.timer-progress-bar');
+const startTimerBtn = document.querySelector('#start-timer-btn');
+const resetTimerBtn = document.querySelector('#reset-timer-btn');
+
 const diceTextures1 = [
     'img/dice1_69.svg',
     'img/dice1_bj.svg',
@@ -52,7 +63,7 @@ const diceTextures2 = [
 const diceWords3 = ['slowly', 'quickly', 'gently', 'roughly', 'teasingly', 'intensely'];
 const diceWordsMapped3 = ['gently', 'slowly', 'teasingly', 'intensely', 'quickly', 'roughly'];
 
-// Add this new array for the time durations
+// Update these arrays near the top of your file
 const diceWords4 = ['30 secs', '60 secs', '90 secs', '30 secs', '60 secs', '90 secs'];
 const diceWordsMapped4 = ['for 90 seconds', 'for 30 seconds', 'for 60 seconds', 'for 90 seconds', 'for 60 seconds', 'for 30 seconds'];
 
@@ -175,6 +186,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load settings
     loadSettings();
+
+    // Initialize the timer button
+    startTimerBtn.addEventListener('click', toggleTimer);
+    resetTimerBtn.addEventListener('click', resetTimer);
+
+    // Initialize the timer buttons
+    initializeTimerButtons();
 });
 
 // Function to save settings to local storage
@@ -206,6 +224,9 @@ function loadSettings() {
         isNightMode = settings.nightMode;
         applyNightMode();
     }
+    
+    // Hide the timer container when loading settings
+    timerContainer.style.display = 'none';
     
     // Update dice visibility and position
     updateDiceVisibility();
@@ -448,6 +469,20 @@ function setDiceResult(score, index) {
     diceResults[index] = words[score - 1] || '';
     diceSettled[index] = true;
     updateScoreDisplay();
+
+    // Check if the timer dice is active and set
+    if (index === 3 && dice4Checkbox.checked) {
+        const timerValue = diceWordsMapped4[score - 1];
+        // Extract the number from the string using regex
+        const match = timerValue.match(/\d+/);
+        timerDuration = match ? parseInt(match[0]) : 30; // Default to 30 seconds if parsing fails
+        remainingTime = timerDuration;
+        timerContainer.style.display = 'block';
+        updateTimerDisplay(remainingTime);
+        updateTimerProgress(remainingTime, timerDuration);
+        startTimerBtn.disabled = false;
+        resetTimerBtn.disabled = true;
+    }
 }
 
 function updateScoreDisplay() {
@@ -502,6 +537,14 @@ function throwDice() {
     diceSettled = [false, false, false, false, false]; 
     nudgeAttempts = [0, 0, 0, 0, 0]; 
 
+    // Reset timer state
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    startTimerBtn.setAttribute('aria-label', 'Start');
+    startTimerBtn.disabled = false;
+    resetTimerBtn.disabled = true;
+
     diceArray.forEach((d, dIdx) => {
         if ((dIdx === 0 && dice1Checkbox.checked) ||
             (dIdx === 1 && dice2Checkbox.checked) ||
@@ -547,6 +590,11 @@ function throwDice() {
         clearTimeout(nudgeTimeout);
     }
     nudgeTimeout = setTimeout(() => checkDiceSettled(), INITIAL_SETTLE_TIME);
+
+    // Reset and hide the timer
+    clearInterval(timerInterval);
+    timerContainer.style.display = 'none';
+    startTimerBtn.disabled = false;
 }
 
 function checkDiceSettled() {
@@ -744,6 +792,12 @@ function updateDiceVisibility() {
             dice.mesh.position.copy(dice.body.position);
         }
     });
+
+    // Hide timer if dice4 is not checked
+    if (!dice4Checkbox.checked) {
+        timerContainer.style.display = 'none';
+    }
+
     positionDiceOnFloor();
 }
 
@@ -884,3 +938,77 @@ closeModalBtn.addEventListener('click', () => {
         updateDiceVisibility();
     });
 });
+
+// Replace the existing startTimer function with these new functions
+function toggleTimer() {
+    if (!isTimerRunning) {
+        if (remainingTime === undefined) {
+            remainingTime = timerDuration;
+        }
+        startTimer();
+    } else {
+        pauseTimer();
+    }
+}
+
+function startTimer() {
+    isTimerRunning = true;
+    startTimerBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    startTimerBtn.setAttribute('aria-label', 'Pause');
+    resetTimerBtn.disabled = false;
+
+    timerInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerDisplay(remainingTime);
+        updateTimerProgress(remainingTime, timerDuration);
+        
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+            startTimerBtn.setAttribute('aria-label', 'Start');
+            startTimerBtn.disabled = true;
+        }
+    }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    startTimerBtn.setAttribute('aria-label', 'Resume');
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+    remainingTime = timerDuration;
+    updateTimerDisplay(remainingTime);
+    updateTimerProgress(remainingTime, timerDuration);
+    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    startTimerBtn.setAttribute('aria-label', 'Start');
+    startTimerBtn.disabled = false;
+    resetTimerBtn.disabled = true;
+}
+
+function updateTimerDisplay(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+function updateTimerProgress(remaining, total) {
+    const progress = (remaining / total) * 100;
+    const timerProgress = document.querySelector('.timer-progress');
+    requestAnimationFrame(() => {
+        timerProgress.style.transform = `translateX(${progress - 100}%)`;
+    });
+}
+
+// Add this function to initialize the timer buttons
+function initializeTimerButtons() {
+    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    startTimerBtn.setAttribute('aria-label', 'Start');
+    resetTimerBtn.innerHTML = '<i class="fas fa-redo"></i>';
+    resetTimerBtn.setAttribute('aria-label', 'Reset');
+}
