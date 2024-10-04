@@ -35,39 +35,49 @@
 		<div id="settings-modal" class="modal">
 			<div class="modal-content">
 				<h2>Dice Settings</h2>
-				<!-- New section for Type -->
-				<h3>Type</h3>
-				<div class="dice-selection">
-					<div class="toggle-container vertical">
-						<label class="toggle">
-							<input type="checkbox" id="dice1-checkbox" checked>
-							<span class="slider"></span>
-							<span class="label">Standard Couple's Dice</span>
-						</label>
-						<label class="toggle">
-							<input type="checkbox" id="dice5-checkbox">
-							<span class="slider"></span>
-							<span class="label">Woman-Specific Dice</span>
+				
+				<div class="settings-section">
+					<h3>Type</h3>
+					<div class="dice-selection">
+						<div class="toggle-container vertical">
+							<label class="toggle">
+								<input type="checkbox" id="dice1-checkbox" checked>
+								<span class="slider"></span>
+								<span class="label">Standard Couple's Dice</span>
+							</label>
+							<label class="toggle">
+								<input type="checkbox" id="dice5-checkbox">
+								<span class="slider"></span>
+								<span class="label">Woman-Specific Dice</span>
+							</label>
+						</div>
+					</div>
+				</div>
+				
+				<div class="settings-section">
+					<h3>Modifiers</h3>
+					<div class="dice-selection">
+						<label><input type="checkbox" id="dice2-checkbox" checked> Location Dice</label>
+						<label><input type="checkbox" id="dice3-checkbox" checked> Descriptive Dice</label>
+						<label><input type="checkbox" id="dice4-checkbox" checked> Timed Dice</label>
+					</div>
+				</div>
+				
+				<div class="settings-section">
+					<h3>Display Settings</h3>
+					<div class="night-mode-container">
+						<span>Night Mode</span>
+						<label class="night-mode-toggle" for="night-mode-toggle">
+							<input type="checkbox" id="night-mode-toggle">
+							<span class="toggle-slider">
+								<i class="fas fa-sun"></i>
+								<i class="fas fa-moon"></i>
+							</span>
 						</label>
 					</div>
 				</div>
-				<!-- New section for Modifiers -->
-				<h3>Modifiers</h3>
-				<div class="dice-selection">
-					<label><input type="checkbox" id="dice2-checkbox" checked> Location Dice</label>
-					<label><input type="checkbox" id="dice3-checkbox" checked> Descriptive Dice</label>
-					<label><input type="checkbox" id="dice4-checkbox" checked> Timed Dice</label>
-				</div>
-				<!-- Display Settings -->
-				 <h3>Display Settings</h3>
-				 <label class="night-mode-toggle" for="night-mode-toggle">
-					 <input type="checkbox" id="night-mode-toggle">
-					 <span class="toggle-slider">
-						 <i class="fas fa-sun"></i>
-						 <i class="fas fa-moon"></i>
-					 </span>
-				 </label>
-				<button id="close-modal">Close</button>
+				
+				<button id="close-modal">Save Settings</button>
 			</div>
 		</div>
 		<script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.10.0/dist/es-module-shims.min.js"></script>
