@@ -6,7 +6,7 @@ import { TextureLoader } from 'three';
 const canvasEl = document.querySelector('#canvas');
 const scoreResult = document.querySelector('#score-result');
 const rollBtn = document.querySelector('#roll-btn');
-const nightModeBtn = document.querySelector('#night-mode-btn');
+const nightModeToggle = document.querySelector('#night-mode-toggle');
 
 let renderer, scene, camera, diceMesh, physicsWorld;
 const textureLoader = new TextureLoader();
@@ -115,7 +115,7 @@ initScene();
 window.addEventListener('resize', updateSceneSize);
 window.addEventListener('dblclick', throwDice);
 rollBtn.addEventListener('click', throwDice);
-nightModeBtn.addEventListener('click', toggleNightMode);
+nightModeToggle.addEventListener('change', toggleNightMode);
 
 // Get the modal elements
 const modal = document.getElementById('settings-modal');
@@ -569,7 +569,7 @@ function checkDiceMaterials() {
 checkDiceMaterials();
 
 function toggleNightMode() {
-    isNightMode = !isNightMode;
+    isNightMode = nightModeToggle.checked;
     
     if (isNightMode) {
         document.body.classList.add('night-mode');

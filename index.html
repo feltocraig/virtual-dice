@@ -21,10 +21,6 @@
 		<main>
 			<div class="content">
 				<canvas id="canvas"></canvas>
-				<button id="night-mode-btn" aria-label="Toggle night mode">
-					<i class="fas fa-sun"></i>
-					<i class="fas fa-moon"></i>
-				</button>
 				<div class="ui-controls">
 					<span id="score-result"></span>
 					<div class="button-container">
@@ -62,6 +58,15 @@
 					<label><input type="checkbox" id="dice3-checkbox" checked> Descriptive Dice</label>
 					<label><input type="checkbox" id="dice4-checkbox" checked> Timed Dice</label>
 				</div>
+				<!-- Display Settings -->
+				 <h3>Display Settings</h3>
+				 <label class="night-mode-toggle" for="night-mode-toggle">
+					 <input type="checkbox" id="night-mode-toggle">
+					 <span class="toggle-slider">
+						 <i class="fas fa-sun"></i>
+						 <i class="fas fa-moon"></i>
+					 </span>
+				 </label>
 				<button id="close-modal">Close</button>
 			</div>
 		</div>

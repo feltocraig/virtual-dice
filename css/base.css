@@ -287,46 +287,6 @@ canvas {
 	background-color: rgba(122, 143, 211, 0.2);
 }
 
-#night-mode-btn .fa-sun {
-	display: none;
-}
-
-#night-mode-btn .fa-moon {
-	display: inline-block;
-}
-
-.night-mode #night-mode-btn .fa-sun {
-	display: inline-block;
-	color: #FFD700;
-}
-
-.night-mode #night-mode-btn .fa-moon {
-	display: none;
-}
-
-#night-mode-btn {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	z-index: 1001;
-	pointer-events: auto;
-	border: none;
-	font-size: 24px;
-	cursor: pointer;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	transition: background-color 0.3s;
-	background-color: rgba(100, 100, 100, 0.2);
-}
-
-#night-mode-btn:hover {
-	background-color: rgba(100, 100, 100, 0.4);
-}
-
 .toggle-container {
     display: flex;
     flex-direction: column;
@@ -431,4 +391,82 @@ input:checked + .slider:before {
 
 .toggle-container.vertical .slider {
     left: 0;
+}
+
+.night-mode-toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.night-mode-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.night-mode-toggle input:checked + .toggle-slider {
+    background-color: #2196F3;
+}
+
+.night-mode-toggle input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-slider .fa-sun,
+.toggle-slider .fa-moon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    transition: .4s;
+}
+
+.toggle-slider .fa-sun {
+    left: 8px;
+    color: #FFD700;
+}
+
+.toggle-slider .fa-moon {
+    right: 8px;
+    color: #F4F4F4;
+}
+
+.night-mode-toggle input:checked + .toggle-slider .fa-sun {
+    opacity: 0;
+}
+
+/* when not checked */
+.night-mode-toggle input:not(:checked) + .toggle-slider .fa-moon {
+    opacity: 0;
+}
+
+.night-mode-toggle input:checked + .toggle-slider .fa-moon {
+    opacity: 1;
+	color: #FFD700;
 }
