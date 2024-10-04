@@ -41,6 +41,11 @@ const timerProgressBar = document.querySelector('.timer-progress-bar');
 const startTimerBtn = document.querySelector('#start-timer-btn');
 const resetTimerBtn = document.querySelector('#reset-timer-btn');
 
+let doneSound;
+
+// Add this near the top of the file with other global variables
+let isMuted = false;
+
 const diceTextures1 = [
     'img/dice1_69.svg',
     'img/dice1_bj.svg',
@@ -193,6 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize the timer buttons
     initializeTimerButtons();
+
+    // Load the done sound
+    doneSound = new Audio('sounds/done.mp3');
+
+    // Initialize the mute button
+    initializeMuteButton();
 });
 
 // Function to save settings to local storage
@@ -968,6 +979,11 @@ function startTimer() {
             startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
             startTimerBtn.setAttribute('aria-label', 'Start');
             startTimerBtn.disabled = true;
+            
+            // Play the done sound only if not muted
+            if (!isMuted) {
+                doneSound.play().catch(error => console.error('Error playing sound:', error));
+            }
         }
     }, 1000);
 }
@@ -1011,4 +1027,24 @@ function initializeTimerButtons() {
     startTimerBtn.setAttribute('aria-label', 'Start');
     resetTimerBtn.innerHTML = '<i class="fas fa-redo"></i>';
     resetTimerBtn.setAttribute('aria-label', 'Reset');
+}
+
+// Add this new function
+function initializeMuteButton() {
+    const muteBtn = document.getElementById('mute-btn');
+    muteBtn.addEventListener('click', toggleMute);
+    updateMuteButtonIcon();
+}
+
+// Add this new function
+function toggleMute() {
+    isMuted = !isMuted;
+    updateMuteButtonIcon();
+}
+
+// Add this new function
+function updateMuteButtonIcon() {
+    const muteBtn = document.getElementById('mute-btn');
+    muteBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+    muteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
 }

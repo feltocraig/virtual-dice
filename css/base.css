@@ -626,13 +626,13 @@ input:checked + .slider:before {
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(var(--color-ui-bg-rgb), 0.8);
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     text-align: center;
     width: auto;
     overflow: hidden;
-	width: 240px;
+    min-width: 280px; /* Adjust this value as needed */
 }
 
 .night-mode .timer-container {
@@ -664,7 +664,9 @@ input:checked + .slider:before {
     font-size: 1.8em;
     font-weight: bold;
     color: var(--color-primary);
-    margin: 0 15px;
+    margin: 0 10px;
+    flex-grow: 1;
+    text-align: center;
 }
 
 .timer-btn {
@@ -673,13 +675,15 @@ input:checked + .slider:before {
     border: none;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 50%; /* This ensures a perfect circle */
     cursor: pointer;
     transition: var(--transition);
     font-size: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 5px;
+    padding: 0; /* Remove any padding */
 }
 
 .timer-btn:hover:not(:disabled) {
@@ -689,6 +693,15 @@ input:checked + .slider:before {
 .timer-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Ensure the icons inside the buttons are centered */
+.timer-btn i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 /* Night mode styles for timer */
