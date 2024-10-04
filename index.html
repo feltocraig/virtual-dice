@@ -16,6 +16,14 @@
 		<link rel="stylesheet" type="text/css" href="css/base.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 		<script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
+		<script>
+			(function() {
+				var isNightMode = localStorage.getItem('nightMode') === 'true';
+				if (isNightMode) {
+					document.documentElement.classList.add('night-mode');
+				}
+			})();
+		</script>
 	</head>
 	<body>
 		<main>
@@ -92,5 +100,14 @@
 		</script>
 		<script src="./js/shake.js"></script>
 		<script type="module" src="./js/main.js"></script>
+		<!-- Add this just before the closing </body> tag -->
+		<div id="mobile-shake-modal" class="modal">
+			<div class="modal-content">
+				<img src="img/shake-phone.svg" alt="Shake phone icon" class="shake-icon">
+				<h2>Shake to Roll!</h2>
+				<p>You can shake your phone to roll the dice.</p>
+				<button id="got-it-btn">Got it!</button>
+			</div>
+		</div>
 	</body>
 </html>

@@ -10,7 +10,7 @@ const nightModeToggle = document.querySelector('#night-mode-toggle');
 
 let renderer, scene, camera, diceMesh, physicsWorld;
 const textureLoader = new TextureLoader();
-let isNightMode = false;
+let isNightMode = localStorage.getItem('nightMode') === 'true';
 
 // Add this near the top of the file, with other global variables
 let nudgeTimeout;
@@ -18,12 +18,17 @@ const dice3Checkbox = document.querySelector('#dice3-checkbox');
 const dice4Checkbox = document.querySelector('#dice4-checkbox');
 const dice5Checkbox = document.querySelector('#dice5-checkbox');
 
-// Add these near the top of the file, with other checkbox declarations
+// Add these constants near the top of the file
 const dice1Checkbox = document.querySelector('#dice1-checkbox');
 const dice2Checkbox = document.querySelector('#dice2-checkbox');
+const closeModalBtn = document.querySelector('#close-modal');
 
 // Add this near the top of the file, with other global variables
 let myShakeEvent;
+
+// Add these constants near the top of the file
+const mobileShakeModal = document.getElementById('mobile-shake-modal');
+const gotItBtn = document.getElementById('got-it-btn');
 
 const diceTextures1 = [
     'img/dice1_69.svg',
@@ -160,7 +165,51 @@ document.addEventListener('DOMContentLoaded', () => {
     dice5Checkbox.addEventListener('change', () => {
         updateCheckboxes(dice5Checkbox, dice1Checkbox);
     });
+
+    // Add this line to show the mobile shake modal
+    showMobileShakeModal();
+
+    // Set the initial state of the night mode toggle
+    nightModeToggle.checked = isNightMode;
+    applyNightMode();
+
+    // Load settings
+    loadSettings();
 });
+
+// Function to save settings to local storage
+function saveSettings() {
+    const settings = {
+        dice1: dice1Checkbox.checked,
+        dice2: dice2Checkbox.checked,
+        dice3: dice3Checkbox.checked,
+        dice4: dice4Checkbox.checked,
+        dice5: dice5Checkbox.checked,
+        nightMode: nightModeToggle.checked
+    };
+    localStorage.setItem('diceSettings', JSON.stringify(settings));
+}
+
+// Function to load settings from local storage
+function loadSettings() {
+    const savedSettings = localStorage.getItem('diceSettings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        dice1Checkbox.checked = settings.dice1;
+        dice2Checkbox.checked = settings.dice2;
+        dice3Checkbox.checked = settings.dice3;
+        dice4Checkbox.checked = settings.dice4;
+        dice5Checkbox.checked = settings.dice5;
+        nightModeToggle.checked = settings.nightMode;
+        
+        // Apply night mode
+        isNightMode = settings.nightMode;
+        applyNightMode();
+    }
+    
+    // Update dice visibility and position
+    updateDiceVisibility();
+}
 
 function initScene() {
 
@@ -209,9 +258,7 @@ function initScene() {
 
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
-    updateInitialDiceVisibility(); // Add this line
-
-    positionDiceOnFloor();
+    updateDiceVisibility();
 
     render();
 
@@ -576,21 +623,40 @@ function checkDiceMaterials() {
 // Call this function after your dice are created
 checkDiceMaterials();
 
-function toggleNightMode() {
-    isNightMode = nightModeToggle.checked;
-    
+function applyNightMode() {
     if (isNightMode) {
-        document.body.classList.add('night-mode');
-        window.lights.ambientLight.intensity = 0.3;
-        window.lights.topLight.intensity = 0.4;
-        scene.background = new THREE.Color(0x202030);  // Dark blue-gray background
+        document.documentElement.classList.add('night-mode');
     } else {
-        document.body.classList.remove('night-mode');
-        window.lights.ambientLight.intensity = 0.5;
-        window.lights.topLight.intensity = 0.5;
-        scene.background = null;
+        document.documentElement.classList.remove('night-mode');
+    }
+    
+    // Update Three.js scene if necessary
+    if (scene) {
+        scene.background = isNightMode ? new THREE.Color(0x202030) : null;
+    }
+    if (window.lights) {
+        window.lights.ambientLight.intensity = isNightMode ? 0.3 : 0.5;
+        window.lights.topLight.intensity = isNightMode ? 0.4 : 0.5;
     }
 }
+
+function toggleNightMode() {
+    isNightMode = nightModeToggle.checked;
+    localStorage.setItem('nightMode', isNightMode);
+    applyNightMode();
+}
+
+// In your initialization code
+document.addEventListener('DOMContentLoaded', () => {
+    // ... other initialization code ...
+    
+    // Load night mode setting
+    isNightMode = localStorage.getItem('nightMode') === 'true';
+    nightModeToggle.checked = isNightMode;
+    applyNightMode();
+    
+    // ... rest of your initialization code ...
+});
 
 // Modify the createTextDiceMesh function to accept a background color
 function createTextDiceMesh(words, backgroundColor) {
@@ -664,7 +730,7 @@ function createTextDiceMesh(words, backgroundColor) {
 }
 
 // Add this new function
-function updateInitialDiceVisibility() {
+function updateDiceVisibility() {
     diceArray.forEach((dice, index) => {
         const isVisible = (index === 0 && dice1Checkbox.checked) ||
                           (index === 1 && dice2Checkbox.checked) ||
@@ -678,6 +744,7 @@ function updateInitialDiceVisibility() {
             dice.mesh.position.copy(dice.body.position);
         }
     });
+    positionDiceOnFloor();
 }
 
 // Modify the positionDiceOnFloor function
@@ -694,7 +761,15 @@ function positionDiceOnFloor() {
     let visibleDiceCount = 0;
 
     diceArray.forEach((dice, index) => {
-        if (dice.mesh.visible) {
+        const isVisible = (index === 0 && dice1Checkbox.checked) ||
+                          (index === 1 && dice2Checkbox.checked) ||
+                          (index === 2 && dice3Checkbox.checked) ||
+                          (index === 3 && dice4Checkbox.checked) ||
+                          (index === 4 && dice5Checkbox.checked);
+        
+        dice.mesh.visible = isVisible;
+        
+        if (isVisible) {
             const x = (visibleDiceCount - 2) * 1.2; // Spread visible dice horizontally
             const y = -6.5; // Position just above the floor
             const z = 0;
@@ -712,6 +787,9 @@ function positionDiceOnFloor() {
             dice.mesh.quaternion.copy(dice.body.quaternion);
 
             visibleDiceCount++;
+        } else {
+            dice.body.position.set(0, -100, 0); // Move invisible dice out of view
+            dice.mesh.position.copy(dice.body.position);
         }
     });
 
@@ -756,3 +834,53 @@ function handleVisibilityChange() {
         myShakeEvent.start();
     }
 }
+
+// Add this function to check if the device is mobile
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+}
+
+// Add this function to show the mobile shake modal
+function showMobileShakeModal() {
+    if (isMobileDevice() && !localStorage.getItem('shakeModalShown')) {
+        mobileShakeModal.style.display = 'block';
+    }
+}
+
+// Add this event listener for the "Got it" button
+gotItBtn.addEventListener('click', () => {
+    mobileShakeModal.style.display = 'none';
+    localStorage.setItem('shakeModalShown', 'true');
+});
+
+// Add event listener for the close modal button
+closeModalBtn.addEventListener('click', () => {
+    saveSettings();
+    modal.style.display = "none";
+    updateDiceVisibility();
+});
+
+// Modify the event listeners for checkbox changes
+[dice1Checkbox, dice2Checkbox, dice3Checkbox, dice4Checkbox, dice5Checkbox].forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        if (checkbox === dice1Checkbox || checkbox === dice5Checkbox) {
+            // Ensure only one of dice1 and dice5 is checked
+            if (checkbox.checked) {
+                if (checkbox === dice1Checkbox) {
+                    dice5Checkbox.checked = false;
+                } else {
+                    dice1Checkbox.checked = false;
+                }
+            } else {
+                // If unchecking, ensure at least one is checked
+                if (checkbox === dice1Checkbox) {
+                    dice5Checkbox.checked = true;
+                } else {
+                    dice1Checkbox.checked = true;
+                }
+            }
+        }
+        saveSettings();
+        updateDiceVisibility();
+    });
+});
