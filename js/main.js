@@ -22,6 +22,9 @@ const dice5Checkbox = document.querySelector('#dice5-checkbox');
 const dice1Checkbox = document.querySelector('#dice1-checkbox');
 const dice2Checkbox = document.querySelector('#dice2-checkbox');
 
+// Add this near the top of the file, with other global variables
+let myShakeEvent;
+
 const diceTextures1 = [
     'img/dice1_69.svg',
     'img/dice1_bj.svg',
@@ -113,9 +116,11 @@ initPhysics();
 initScene();
 
 window.addEventListener('resize', updateSceneSize);
-window.addEventListener('dblclick', throwDice);
 rollBtn.addEventListener('click', throwDice);
 nightModeToggle.addEventListener('change', toggleNightMode);
+
+// Add this new event listener for the 'visibilitychange' event
+document.addEventListener('visibilitychange', handleVisibilityChange);
 
 // Get the modal elements
 const modal = document.getElementById('settings-modal');
@@ -209,6 +214,9 @@ function initScene() {
     positionDiceOnFloor();
 
     render();
+
+    // Add this at the end of the initScene function
+    initShakeEvent();
 }
 
 function initPhysics() {
@@ -721,4 +729,30 @@ function positionDiceOnFloor() {
     });
 
     updateScoreDisplay();
+}
+
+// Add this new function
+function initShakeEvent() {
+    myShakeEvent = new Shake({
+        threshold: 15,
+        timeout: 1000
+    });
+
+    myShakeEvent.start();
+
+    window.addEventListener('shake', shakeEventDidOccur, false);
+}
+
+// Add this new function
+function shakeEventDidOccur() {
+    throwDice();
+}
+
+// Add this new function to handle visibility changes
+function handleVisibilityChange() {
+    if (document.hidden) {
+        myShakeEvent.stop();
+    } else {
+        myShakeEvent.start();
+    }
 }
