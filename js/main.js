@@ -37,14 +37,13 @@ let remainingTime;
 let isTimerRunning = false;
 const timerContainer = document.querySelector('.timer-container');
 const timerDisplay = document.querySelector('.timer-display');
-const timerProgressBar = document.querySelector('.timer-progress-bar');
 const startTimerBtn = document.querySelector('#start-timer-btn');
 const resetTimerBtn = document.querySelector('#reset-timer-btn');
 
 let doneSound;
 
 // Add this near the top of the file with other global variables
-let isMuted = false;
+let isMuted = localStorage.getItem('isMuted') === 'true';
 
 const diceTextures1 = [
     'img/dice1_69.svg',
@@ -1033,12 +1032,14 @@ function initializeTimerButtons() {
 function initializeMuteButton() {
     const muteBtn = document.getElementById('mute-btn');
     muteBtn.addEventListener('click', toggleMute);
+    isMuted = localStorage.getItem('isMuted') === 'true';
     updateMuteButtonIcon();
 }
 
 // Add this new function
 function toggleMute() {
     isMuted = !isMuted;
+    localStorage.setItem('isMuted', isMuted);
     updateMuteButtonIcon();
 }
 
