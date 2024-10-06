@@ -45,6 +45,9 @@ let doneSound;
 // Add this near the top of the file with other global variables
 let isMuted = localStorage.getItem('isMuted') === 'true';
 
+// Add this constant near the top of the file
+const dice6Checkbox = document.querySelector('#dice6-checkbox');
+
 const diceTextures1 = [
     'img/dice1_69.svg',
     'img/dice1_bj.svg',
@@ -78,6 +81,9 @@ const diceWordsMapped5 = ['Finger her g-spot', 'Eat her out', 'Play with her bre
 //Cowgirl, Reverse Cowgirl, Spooning
 const diceWords1 = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
 const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the bathroom', 'on a couch', 'on the floor'];
+
+const diceWords6 = ['Hand Job', 'Blow Job', 'Ball Play', 'Spanking', 'Erotic Massage', 'Tease'];
+const diceWordsMapped6 = ['Play with his balls', 'Give him a hand job', 'Give him an erotic massage', 'Sexually tease him', 'Blow him', 'Spank him'];
 
 // Girl Related
 // 1. Oral Sex 2. Clitoral Stimulation 3. G-Spot Stimulation 4. Anal Play 5. Breast Play
@@ -125,9 +131,9 @@ const params = {
 };
 
 const diceArray = [];
-let diceResults = ['', '', '', '', '']; // Add a fifth empty string
-let diceSettled = [false, false, false, false, false]; // Add a fifth false value
-let nudgeAttempts = [0, 0, 0, 0, 0]; // Update to five zeros
+let diceResults = ['', '', '', '', '', '']; // Add a sixth empty string
+let diceSettled = [false, false, false, false, false, false]; // Add a sixth false value
+let nudgeAttempts = [0, 0, 0, 0, 0, 0]; // Update to six zeros
 const MAX_NUDGE_ATTEMPTS = 3;
 const NUDGE_INTERVAL = 2000; // 2 seconds
 const INITIAL_SETTLE_TIME = 5000; // 5 seconds
@@ -213,6 +219,7 @@ function saveSettings() {
         dice3: dice3Checkbox.checked,
         dice4: dice4Checkbox.checked,
         dice5: dice5Checkbox.checked,
+        dice6: dice6Checkbox.checked,
         nightMode: nightModeToggle.checked
     };
     localStorage.setItem('diceSettings', JSON.stringify(settings));
@@ -228,6 +235,7 @@ function loadSettings() {
         dice3Checkbox.checked = settings.dice3;
         dice4Checkbox.checked = settings.dice4;
         dice5Checkbox.checked = settings.dice5;
+        dice6Checkbox.checked = settings.dice6;
         nightModeToggle.checked = settings.nightMode;
         
         // Apply night mode
@@ -280,12 +288,14 @@ function initScene() {
     const diceMesh3 = createTextDiceMesh(diceWords3, '#B4A6AB');
     const diceMesh4 = createTextDiceMesh(diceWords4, '#E3E2A0');
     const diceMesh5 = createTextDiceMesh(diceWords5, '#A0E3E2');
+    const diceMesh6 = createTextDiceMesh(diceWords6, '#A0E3C2'); // Choose a suitable background color
 
     diceArray.push(createDice(diceMesh1, 0));
     diceArray.push(createDice(diceMesh2, 1));
     diceArray.push(createDice(diceMesh3, 2));
     diceArray.push(createDice(diceMesh4, 3));
     diceArray.push(createDice(diceMesh5, 4));
+    diceArray.push(createDice(diceMesh6, 5));
 
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
@@ -475,7 +485,8 @@ function setDiceResult(score, index) {
     const words = index === 0 ? diceWords1 : 
                   (index === 1 ? diceWords2 : 
                   (index === 2 ? diceWordsMapped3 : 
-                  (index === 3 ? diceWordsMapped4 : diceWordsMapped5)));
+                  (index === 3 ? diceWordsMapped4 : 
+                  (index === 4 ? diceWordsMapped5 : diceWordsMapped6))));
     diceResults[index] = words[score - 1] || '';
     diceSettled[index] = true;
     updateScoreDisplay();
@@ -499,9 +510,10 @@ function updateScoreDisplay() {
     const activeResults = [
         dice1Checkbox.checked ? diceResults[0] : '',
         dice5Checkbox.checked ? diceResults[4] : '',
+        dice6Checkbox.checked ? diceResults[5] : '',
         dice2Checkbox.checked ? diceResults[1] : '',
         dice3Checkbox.checked ? diceResults[2] : '',
-        dice4Checkbox.checked ? diceResults[3] : ''
+        dice4Checkbox.checked ? diceResults[3] : '',
     ].filter(result => result !== '');
 
     const newScore = activeResults.join(' ');
@@ -516,7 +528,8 @@ function updateScoreDisplay() {
         (index === 1 && !dice2Checkbox.checked) ||
         (index === 2 && !dice3Checkbox.checked) || 
         (index === 3 && !dice4Checkbox.checked) ||
-        (index === 4 && !dice5Checkbox.checked)
+        (index === 4 && !dice5Checkbox.checked) ||
+        (index === 5 && !dice6Checkbox.checked)
     )) {
         console.log("All active dice have settled.");
         clearTimeout(nudgeTimeout);
@@ -543,9 +556,9 @@ function updateSceneSize() {
 
 function throwDice() {
     scoreResult.innerHTML = '';
-    diceResults = ['', '', '', '', '']; 
-    diceSettled = [false, false, false, false, false]; 
-    nudgeAttempts = [0, 0, 0, 0, 0]; 
+    diceResults = ['', '', '', '', '', '']; 
+    diceSettled = [false, false, false, false, false, false]; 
+    nudgeAttempts = [0, 0, 0, 0, 0, 0]; 
 
     // Reset timer state
     clearInterval(timerInterval);
@@ -560,7 +573,8 @@ function throwDice() {
             (dIdx === 1 && dice2Checkbox.checked) ||
             (dIdx === 2 && dice3Checkbox.checked) || 
             (dIdx === 3 && dice4Checkbox.checked) ||
-            (dIdx === 4 && dice5Checkbox.checked)) {
+            (dIdx === 4 && dice5Checkbox.checked) ||
+            (dIdx === 5 && dice6Checkbox.checked)) {
             d.body.velocity.setZero();
             d.body.angularVelocity.setZero();
 
@@ -794,7 +808,8 @@ function updateDiceVisibility() {
                           (index === 1 && dice2Checkbox.checked) ||
                           (index === 2 && dice3Checkbox.checked) ||
                           (index === 3 && dice4Checkbox.checked) ||
-                          (index === 4 && dice5Checkbox.checked);
+                          (index === 4 && dice5Checkbox.checked) ||
+                          (index === 5 && dice6Checkbox.checked);
         
         dice.mesh.visible = isVisible;
         if (!isVisible) {
@@ -829,7 +844,8 @@ function positionDiceOnFloor() {
                           (index === 1 && dice2Checkbox.checked) ||
                           (index === 2 && dice3Checkbox.checked) ||
                           (index === 3 && dice4Checkbox.checked) ||
-                          (index === 4 && dice5Checkbox.checked);
+                          (index === 4 && dice5Checkbox.checked) ||
+                          (index === 5 && dice6Checkbox.checked);
         
         dice.mesh.visible = isVisible;
         
@@ -925,22 +941,25 @@ closeModalBtn.addEventListener('click', () => {
 });
 
 // Modify the event listeners for checkbox changes
-[dice1Checkbox, dice2Checkbox, dice3Checkbox, dice4Checkbox, dice5Checkbox].forEach(checkbox => {
+[dice1Checkbox, dice2Checkbox, dice3Checkbox, dice4Checkbox, dice5Checkbox, dice6Checkbox].forEach(checkbox => {
     checkbox.addEventListener('change', () => {
-        if (checkbox === dice1Checkbox || checkbox === dice5Checkbox) {
-            // Ensure only one of dice1 and dice5 is checked
+        if (checkbox === dice1Checkbox || checkbox === dice5Checkbox || checkbox === dice6Checkbox) {
+            // Ensure only one of dice1, dice5, and dice6 is checked
             if (checkbox.checked) {
                 if (checkbox === dice1Checkbox) {
                     dice5Checkbox.checked = false;
+                    dice6Checkbox.checked = false;
+                } else if (checkbox === dice5Checkbox) {
+                    dice1Checkbox.checked = false;
+                    dice6Checkbox.checked = false;
                 } else {
                     dice1Checkbox.checked = false;
+                    dice5Checkbox.checked = false;
                 }
             } else {
                 // If unchecking, ensure at least one is checked
-                if (checkbox === dice1Checkbox) {
-                    dice5Checkbox.checked = true;
-                } else {
-                    dice1Checkbox.checked = true;
+                if (!dice1Checkbox.checked && !dice5Checkbox.checked && !dice6Checkbox.checked) {
+                    checkbox.checked = true;
                 }
             }
         }
