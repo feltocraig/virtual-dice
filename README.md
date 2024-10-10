@@ -21,3 +21,12 @@ Both tools are added as JS modules via CDN with import map. Other installation o
 
 ## SVGS
 https://thenounproject.com/
+
+## Infra
+Squarespace Domain
+Cloudflare DNS
+
+Github Actions -> Minifies css and js -> Publishes to `gh-pages` branch
+Cloudflare Pages looks at the `gh-pages` branch and publishes automatically
+
+https://virtualsexdice.com
