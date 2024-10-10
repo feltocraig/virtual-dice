@@ -3,52 +3,62 @@ import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
 
-const canvasEl = document.querySelector('#canvas');
-const scoreResult = document.querySelector('#score-result');
-const rollBtn = document.querySelector('#roll-btn');
-const nightModeToggle = document.querySelector('#night-mode-toggle');
+const config = {
+    diceCount: 6,
+    checkboxes: Array.from({ length: 6 }, (_, i) => document.querySelector(`#dice${i+1}-checkbox`)),
+    elements: {
+        canvas: document.querySelector('#canvas'),
+        scoreResult: document.querySelector('#score-result'),
+        rollBtn: document.querySelector('#roll-btn'),
+        nightModeToggle: document.querySelector('#night-mode-toggle'),
+        timerContainer: document.querySelector('.timer-container'),
+        timerDisplay: document.querySelector('.timer-display'),
+        startTimerBtn: document.querySelector('#start-timer-btn'),
+        resetTimerBtn: document.querySelector('#reset-timer-btn'),
+        mobileShakeModal: document.getElementById('mobile-shake-modal'),
+        gotItBtn: document.getElementById('got-it-btn'),
+        muteBtn: document.getElementById('mute-btn'),
+        settingsModal: document.getElementById('settings-modal'),
+        settingsBtn: document.getElementById('settings-btn'),
+        closeModalBtn: document.getElementById('close-modal'),
+    },
+    params: {
+        numberOfDice: 6,
+        segments: 40,
+        edgeRadius: .07,
+        notchRadius: .12,
+        notchDepth: .1,
+    },
+    physics: {
+        nudgeInterval: 2000,
+        initialSettleTime: 5000,
+        maxNudgeAttempts: 3,
+    },
+    state: {
+        isNightMode: localStorage.getItem('nightMode') === 'true',
+        isMuted: localStorage.getItem('isMuted') === 'true',
+        diceResults: Array(6).fill(''),
+        diceSettled: Array(6).fill(false),
+        nudgeAttempts: Array(6).fill(0),
+        isTimerRunning: false,
+    }
+};
 
-let renderer, scene, camera, diceMesh, physicsWorld;
+let renderer, scene, camera, physicsWorld;
 const textureLoader = new TextureLoader();
-let isNightMode = localStorage.getItem('nightMode') === 'true';
 
-// Add this near the top of the file, with other global variables
 let nudgeTimeout;
-const dice3Checkbox = document.querySelector('#dice3-checkbox');
-const dice4Checkbox = document.querySelector('#dice4-checkbox');
-const dice5Checkbox = document.querySelector('#dice5-checkbox');
 
-// Add these constants near the top of the file
-const dice1Checkbox = document.querySelector('#dice1-checkbox');
-const dice2Checkbox = document.querySelector('#dice2-checkbox');
-const closeModalBtn = document.querySelector('#close-modal');
-
-// Add this near the top of the file, with other global variables
 let myShakeEvent;
 
-// Add these constants near the top of the file
-const mobileShakeModal = document.getElementById('mobile-shake-modal');
-const gotItBtn = document.getElementById('got-it-btn');
-
-// Add these variables near the top of the file
 let timerInterval;
 let timerDuration;
 let remainingTime;
-let isTimerRunning = false;
-const timerContainer = document.querySelector('.timer-container');
-const timerDisplay = document.querySelector('.timer-display');
-const startTimerBtn = document.querySelector('#start-timer-btn');
-const resetTimerBtn = document.querySelector('#reset-timer-btn');
-
 let doneSound;
 
-// Add this near the top of the file with other global variables
-let isMuted = localStorage.getItem('isMuted') === 'true';
-
-// Add this constant near the top of the file
-const dice6Checkbox = document.querySelector('#dice6-checkbox');
-
-const diceTextures1 = [
+//Cowgirl, Reverse Cowgirl, Spooning
+const coupleActivityWords = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
+const activityDiceTextures = [
     'img/dice1_69.svg',
     'img/dice1_bj.svg',
     'img/dice1_cowgirl.svg',
@@ -57,7 +67,8 @@ const diceTextures1 = [
     'img/dice1_legsinair.svg',
 ].map(loadTexture);
 
-const diceTextures2 = [
+const locationWords = ['on a counter', 'in bed', 'in the kitchen', 'in the bathroom', 'on a couch', 'on the floor'];
+const locationDiceTextures = [
     'img/dice2_bed.svg',
     'img/dice2_couch.svg',
     'img/dice2_counter.svg',
@@ -66,24 +77,17 @@ const diceTextures2 = [
     'img/dice2_shower.svg',
 ].map(loadTexture);
 
-// Remove the diceTextures3 array and replace it with a words array
-const diceWords3 = ['slowly', 'quickly', 'gently', 'roughly', 'teasingly', 'intensely'];
-const diceWordsMapped3 = ['gently', 'slowly', 'teasingly', 'intensely', 'quickly', 'roughly'];
+const intensityWords = ['slowly', 'quickly', 'gently', 'roughly', 'teasingly', 'intensely'];
+const intensityPhrases = ['gently', 'slowly', 'teasingly', 'intensely', 'quickly', 'roughly'];
 
-// Update these arrays near the top of your file
-const diceWords4 = ['30 secs', '60 secs', '90 secs', '30 secs', '60 secs', '90 secs'];
-const diceWordsMapped4 = ['for 90 seconds', 'for 30 seconds', 'for 60 seconds', 'for 90 seconds', 'for 60 seconds', 'for 30 seconds'];
+const durationWords = ['30 secs', '60 secs', '90 secs', '30 secs', '60 secs', '90 secs'];
+const durationPhrases = ['for 90 seconds', 'for 30 seconds', 'for 60 seconds', 'for 90 seconds', 'for 60 seconds', 'for 30 seconds'];
 
-// Add this new array for the fifth dice
-const diceWords5 = ['Oral', 'Finger Clit', 'G-Spot', 'Butt play', 'Breast play', 'Spanking'];
-const diceWordsMapped5 = ['Finger her g-spot', 'Eat her out', 'Play with her breasts', 'Spank her', 'Play with her clit', 'Play with her butt'];
+const femaleActivityWords = ['Oral', 'Finger Clit', 'G-Spot', 'Butt play', 'Breast play', 'Spanking'];
+const femaleActivityPhrases = ['Finger her g-spot', 'Eat her out', 'Play with her breasts', 'Spank her', 'Play with her clit', 'Play with her butt'];
 
-//Cowgirl, Reverse Cowgirl, Spooning
-const diceWords1 = ['Cowgirl', '69', 'Eat her out', 'Missionary', 'Blowjob', 'Doggy'];
-const diceWords2 = ['on a counter', 'in bed', 'in the kitchen', 'in the bathroom', 'on a couch', 'on the floor'];
-
-const diceWords6 = ['Hand Job', 'Blow Job', 'Ball Play', 'Spanking', 'Erotic Massage', 'Tease'];
-const diceWordsMapped6 = ['Play with his balls', 'Give him a hand job', 'Give him an erotic massage', 'Sexually tease him', 'Blow him', 'Spank him'];
+const maleActivityWords = ['Hand Job', 'Blow Job', 'Ball Play', 'Spanking', 'Erotic Massage', 'Tease'];
+const maleActivityPhrases = ['Play with his balls', 'Give him a hand job', 'Give him an erotic massage', 'Sexually tease him', 'Blow him', 'Spank him'];
 
 // Girl Related
 // 1. Oral Sex 2. Clitoral Stimulation 3. G-Spot Stimulation 4. Anal Play 5. Breast Play
@@ -122,28 +126,12 @@ function loadTexture(url, index) {
     );
 }
 
-const params = {
-    numberOfDice: 5, // Change this to 5
-    segments: 40,
-    edgeRadius: .07,
-    notchRadius: .12,
-    notchDepth: .1,
-};
-
-const diceArray = [];
-let diceResults = ['', '', '', '', '', '']; // Add a sixth empty string
-let diceSettled = [false, false, false, false, false, false]; // Add a sixth false value
-let nudgeAttempts = [0, 0, 0, 0, 0, 0]; // Update to six zeros
-const MAX_NUDGE_ATTEMPTS = 3;
-const NUDGE_INTERVAL = 2000; // 2 seconds
-const INITIAL_SETTLE_TIME = 5000; // 5 seconds
+let diceArray = [];
 
 initPhysics();
 initScene();
 
 window.addEventListener('resize', updateSceneSize);
-rollBtn.addEventListener('click', throwDice);
-nightModeToggle.addEventListener('change', toggleNightMode);
 
 // Add this new event listener for the 'visibilitychange' event
 document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -190,16 +178,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add this line to show the mobile shake modal
     showMobileShakeModal();
 
+    // Add event listeners for rollBtn and nightModeToggle
+    config.elements.rollBtn.addEventListener('click', throwDice);
+    config.elements.nightModeToggle.addEventListener('change', toggleNightMode);
+
     // Set the initial state of the night mode toggle
-    nightModeToggle.checked = isNightMode;
+    config.elements.nightModeToggle.checked = config.state.isNightMode;
     applyNightMode();
 
     // Load settings
     loadSettings();
 
     // Initialize the timer button
-    startTimerBtn.addEventListener('click', toggleTimer);
-    resetTimerBtn.addEventListener('click', resetTimer);
+    config.elements.startTimerBtn.addEventListener('click', toggleTimer);
+    config.elements.resetTimerBtn.addEventListener('click', resetTimer);
 
     // Initialize the timer buttons
     initializeTimerButtons();
@@ -214,13 +206,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function to save settings to local storage
 function saveSettings() {
     const settings = {
-        dice1: dice1Checkbox.checked,
-        dice2: dice2Checkbox.checked,
-        dice3: dice3Checkbox.checked,
-        dice4: dice4Checkbox.checked,
-        dice5: dice5Checkbox.checked,
-        dice6: dice6Checkbox.checked,
-        nightMode: nightModeToggle.checked
+        dice1: config.checkboxes[0].checked,
+        dice2: config.checkboxes[1].checked,
+        dice3: config.checkboxes[2].checked,
+        dice4: config.checkboxes[3].checked,
+        dice5: config.checkboxes[4].checked,
+        dice6: config.checkboxes[5].checked,
+        nightMode: config.elements.nightModeToggle.checked
     };
     localStorage.setItem('diceSettings', JSON.stringify(settings));
 }
@@ -230,24 +222,34 @@ function loadSettings() {
     const savedSettings = localStorage.getItem('diceSettings');
     if (savedSettings) {
         const settings = JSON.parse(savedSettings);
-        dice1Checkbox.checked = settings.dice1;
-        dice2Checkbox.checked = settings.dice2;
-        dice3Checkbox.checked = settings.dice3;
-        dice4Checkbox.checked = settings.dice4;
-        dice5Checkbox.checked = settings.dice5;
-        dice6Checkbox.checked = settings.dice6;
-        nightModeToggle.checked = settings.nightMode;
+        config.checkboxes[0].checked = settings.dice1;
+        config.checkboxes[1].checked = settings.dice2;
+        config.checkboxes[2].checked = settings.dice3;
+        config.checkboxes[3].checked = settings.dice4;
+        config.checkboxes[4].checked = settings.dice5;
+        config.checkboxes[5].checked = settings.dice6;
+        config.elements.nightModeToggle.checked = settings.nightMode;
         
         // Apply night mode
-        isNightMode = settings.nightMode;
+        config.state.isNightMode = settings.nightMode;
         applyNightMode();
     }
     
     // Hide the timer container when loading settings
-    timerContainer.style.display = 'none';
+    config.elements.timerContainer.style.display = 'none';
     
-    // Update dice visibility and position
     updateDiceVisibility();
+}
+
+function createDiceMeshes() {
+    return [
+        createDiceMesh(activityDiceTextures),
+        createDiceMesh(locationDiceTextures),
+        createTextDiceMesh(intensityWords, '#B4A6AB'),
+        createTextDiceMesh(durationWords, '#E3E2A0'),
+        createTextDiceMesh(femaleActivityWords, '#A0E3E2'),
+        createTextDiceMesh(maleActivityWords, '#A0E3C2')
+    ];
 }
 
 function initScene() {
@@ -255,7 +257,7 @@ function initScene() {
     renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true,
-        canvas: canvasEl
+        canvas: config.elements.canvas
     });
     renderer.shadowMap.enabled = true
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -283,27 +285,14 @@ function initScene() {
     window.lights = { ambientLight, topLight };
     
     createFloor();
-    const diceMesh1 = createDiceMesh(diceTextures1);
-    const diceMesh2 = createDiceMesh(diceTextures2);
-    const diceMesh3 = createTextDiceMesh(diceWords3, '#B4A6AB');
-    const diceMesh4 = createTextDiceMesh(diceWords4, '#E3E2A0');
-    const diceMesh5 = createTextDiceMesh(diceWords5, '#A0E3E2');
-    const diceMesh6 = createTextDiceMesh(diceWords6, '#A0E3C2'); // Choose a suitable background color
-
-    diceArray.push(createDice(diceMesh1, 0));
-    diceArray.push(createDice(diceMesh2, 1));
-    diceArray.push(createDice(diceMesh3, 2));
-    diceArray.push(createDice(diceMesh4, 3));
-    diceArray.push(createDice(diceMesh5, 4));
-    diceArray.push(createDice(diceMesh6, 5));
-
+    const diceMeshes = createDiceMeshes();
+    diceArray = diceMeshes.map((mesh, index) => createDice(mesh, index));
     diceArray.forEach(dice => addDiceEvents(dice, dice.index));
 
     updateDiceVisibility();
 
     render();
 
-    // Add this at the end of the initScene function
     initShakeEvent();
 }
 
@@ -392,10 +381,10 @@ function createDiceMesh(textures) {
 }
 
 function createBoxGeometry() {
-    let boxGeometry = new THREE.BoxGeometry(1, 1, 1, params.segments, params.segments, params.segments);
+    let boxGeometry = new THREE.BoxGeometry(1, 1, 1, config.params.segments, config.params.segments, config.params.segments);
 
     const positionAttr = boxGeometry.attributes.position;
-    const subCubeHalfSize = .5 - params.edgeRadius;
+    const subCubeHalfSize = .5 - config.params.edgeRadius;
 
     for (let i = 0; i < positionAttr.count; i++) {
         let position = new THREE.Vector3().fromBufferAttribute(positionAttr, i);
@@ -404,21 +393,21 @@ function createBoxGeometry() {
         const addition = new THREE.Vector3().subVectors(position, subCube);
 
         if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
-            addition.normalize().multiplyScalar(params.edgeRadius);
+            addition.normalize().multiplyScalar(config.params.edgeRadius);
             position = subCube.add(addition);
         } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize) {
             addition.z = 0;
-            addition.normalize().multiplyScalar(params.edgeRadius);
+            addition.normalize().multiplyScalar(config.params.edgeRadius);
             position.x = subCube.x + addition.x;
             position.y = subCube.y + addition.y;
         } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
             addition.y = 0;
-            addition.normalize().multiplyScalar(params.edgeRadius);
+            addition.normalize().multiplyScalar(config.params.edgeRadius);
             position.x = subCube.x + addition.x;
             position.z = subCube.z + addition.z;
         } else if (Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
             addition.x = 0;
-            addition.normalize().multiplyScalar(params.edgeRadius);
+            addition.normalize().multiplyScalar(config.params.edgeRadius);
             position.y = subCube.y + addition.y;
             position.z = subCube.z + addition.z;
         }
@@ -449,7 +438,7 @@ function createDice(diceMesh, index) {
 
 function addDiceEvents(dice, index) {
     dice.body.addEventListener('sleep', (e) => {
-        if (!diceSettled[index]) {
+        if (!config.state.diceSettled[index]) {
             const score = getDiceScore(e.target);
             if (score !== null) {
                 setDiceResult(score, index);
@@ -482,58 +471,51 @@ function getDiceScore(diceBody) {
 }
 
 function setDiceResult(score, index) {
-    const words = index === 0 ? diceWords1 : 
-                  (index === 1 ? diceWords2 : 
-                  (index === 2 ? diceWordsMapped3 : 
-                  (index === 3 ? diceWordsMapped4 : 
-                  (index === 4 ? diceWordsMapped5 : diceWordsMapped6))));
-    diceResults[index] = words[score - 1] || '';
-    diceSettled[index] = true;
+    const words = index === 0 ? coupleActivityWords : 
+                  (index === 1 ? locationWords : 
+                  (index === 2 ? intensityPhrases : 
+                  (index === 3 ? durationPhrases : 
+                  (index === 4 ? femaleActivityPhrases : maleActivityPhrases))));
+    config.state.diceResults[index] = words[score - 1] || '';
+    config.state.diceSettled[index] = true;
     updateScoreDisplay();
 
     // Check if the timer dice is active and set
-    if (index === 3 && dice4Checkbox.checked) {
-        const timerValue = diceWordsMapped4[score - 1];
-        // Extract the number from the string using regex
+    if (index === 3 && config.checkboxes[3].checked) {
+        const timerValue = durationPhrases[score - 1];
         const match = timerValue.match(/\d+/);
-        timerDuration = match ? parseInt(match[0]) : 30; // Default to 30 seconds if parsing fails
+        timerDuration = match ? parseInt(match[0]) : 30;
         remainingTime = timerDuration;
-        timerContainer.style.display = 'block';
+        config.elements.timerContainer.style.display = 'block';
         updateTimerDisplay(remainingTime);
         updateTimerProgress(remainingTime, timerDuration);
-        startTimerBtn.disabled = false;
-        resetTimerBtn.disabled = true;
+        config.elements.startTimerBtn.disabled = false;
+        config.elements.resetTimerBtn.disabled = true;
     }
 }
 
 function updateScoreDisplay() {
     const activeResults = [
-        dice1Checkbox.checked ? diceResults[0] : '',
-        dice5Checkbox.checked ? diceResults[4] : '',
-        dice6Checkbox.checked ? diceResults[5] : '',
-        dice2Checkbox.checked ? diceResults[1] : '',
-        dice3Checkbox.checked ? diceResults[2] : '',
-        dice4Checkbox.checked ? diceResults[3] : '',
+        config.checkboxes[0].checked ? config.state.diceResults[0] : '',
+        config.checkboxes[4].checked ? config.state.diceResults[4] : '',
+        config.checkboxes[5].checked ? config.state.diceResults[5] : '',
+        config.checkboxes[1].checked ? config.state.diceResults[1] : '',
+        config.checkboxes[2].checked ? config.state.diceResults[2] : '',
+        config.checkboxes[3].checked ? config.state.diceResults[3] : '',
     ].filter(result => result !== '');
 
     const newScore = activeResults.join(' ');
-    if (scoreResult.innerHTML !== newScore) {
-        scoreResult.innerHTML = newScore;
+    if (config.elements.scoreResult.innerHTML !== newScore) {
+        config.elements.scoreResult.innerHTML = newScore;
         console.log(`Updated score: "${newScore}"`);
     }
 
-    if (diceSettled.every((settled, index) => 
-        settled || 
-        (index === 0 && !dice1Checkbox.checked) ||
-        (index === 1 && !dice2Checkbox.checked) ||
-        (index === 2 && !dice3Checkbox.checked) || 
-        (index === 3 && !dice4Checkbox.checked) ||
-        (index === 4 && !dice5Checkbox.checked) ||
-        (index === 5 && !dice6Checkbox.checked)
-    )) {
+    const allSettled = config.state.diceSettled.every((settled, index) => settled || !config.checkboxes[index].checked);
+    if (allSettled) {
         console.log("All active dice have settled.");
         clearTimeout(nudgeTimeout);
     }
+
 }
 
 function render() {
@@ -554,81 +536,76 @@ function updateSceneSize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function resetDice(dice, index) {
+    if (config.checkboxes[index].checked) {
+        dice.body.velocity.setZero();
+        dice.body.angularVelocity.setZero();
+        dice.body.position = new CANNON.Vec3(2, index * 0.5 + 3, 0);
+        dice.mesh.position.copy(dice.body.position);
+        dice.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random());
+        dice.body.quaternion.copy(dice.mesh.quaternion);
+
+        const force = 3 + 2 * Math.random();
+        const upwardForce = 2 + Math.random();
+        dice.body.applyImpulse(
+            new CANNON.Vec3(-force, upwardForce, (Math.random() - 0.5) * 0.5),
+            new CANNON.Vec3(0, 0, .02)
+        );
+
+        const torque = new CANNON.Vec3(
+            (Math.random() - 0.5) * 1.5,
+            (Math.random() - 0.5) * 1.5,
+            (Math.random() - 0.5) * 1.5
+        );
+        dice.body.torque.set(torque.x, torque.y, torque.z);
+
+        dice.body.allowSleep = true;
+        dice.mesh.visible = true;
+    } else {
+        dice.body.position.set(0, -100, 0);
+        dice.mesh.position.copy(dice.body.position);
+        dice.body.velocity.setZero();
+        dice.body.angularVelocity.setZero();
+        dice.mesh.visible = false;
+        config.state.diceSettled[index] = true;
+    }
+}
+
 function throwDice() {
-    scoreResult.innerHTML = '';
-    diceResults = ['', '', '', '', '', '']; 
-    diceSettled = [false, false, false, false, false, false]; 
-    nudgeAttempts = [0, 0, 0, 0, 0, 0]; 
+    config.elements.scoreResult.innerHTML = '';
+    config.state.diceResults.fill('');
+    config.state.diceSettled.fill(false);
+    config.state.nudgeAttempts.fill(0);
 
     // Reset timer state
     clearInterval(timerInterval);
-    isTimerRunning = false;
-    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
-    startTimerBtn.setAttribute('aria-label', 'Start');
-    startTimerBtn.disabled = false;
-    resetTimerBtn.disabled = true;
+    config.state.isTimerRunning = false;
+    config.elements.startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    config.elements.startTimerBtn.setAttribute('aria-label', 'Start');
+    config.elements.startTimerBtn.disabled = false;
+    config.elements.resetTimerBtn.disabled = true;
 
-    diceArray.forEach((d, dIdx) => {
-        if ((dIdx === 0 && dice1Checkbox.checked) ||
-            (dIdx === 1 && dice2Checkbox.checked) ||
-            (dIdx === 2 && dice3Checkbox.checked) || 
-            (dIdx === 3 && dice4Checkbox.checked) ||
-            (dIdx === 4 && dice5Checkbox.checked) ||
-            (dIdx === 5 && dice6Checkbox.checked)) {
-            d.body.velocity.setZero();
-            d.body.angularVelocity.setZero();
-
-            d.body.position = new CANNON.Vec3(2, dIdx * 0.5 + 3, 0);
-            d.mesh.position.copy(d.body.position);
-
-            d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
-            d.body.quaternion.copy(d.mesh.quaternion);
-
-            const force = 3 + 2 * Math.random();
-            const upwardForce = 2 + Math.random();
-            d.body.applyImpulse(
-                new CANNON.Vec3(-force, upwardForce, (Math.random() - 0.5) * 0.5),
-                new CANNON.Vec3(0, 0, .02)
-            );
-
-            const torque = new CANNON.Vec3(
-                (Math.random() - 0.5) * 1.5,
-                (Math.random() - 0.5) * 1.5,
-                (Math.random() - 0.5) * 1.5
-            );
-            d.body.torque.set(torque.x, torque.y, torque.z);
-
-            d.body.allowSleep = true;
-            d.mesh.visible = true;
-        } else {
-            d.body.position.set(0, -100, 0);
-            d.mesh.position.copy(d.body.position);
-            d.body.velocity.setZero();
-            d.body.angularVelocity.setZero();
-            d.mesh.visible = false;
-            diceSettled[dIdx] = true;
-        }
-    });
+    diceArray.forEach(resetDice);
 
     if (nudgeTimeout) {
         clearTimeout(nudgeTimeout);
     }
-    nudgeTimeout = setTimeout(() => checkDiceSettled(), INITIAL_SETTLE_TIME);
+    nudgeTimeout = setTimeout(() => checkDiceSettled(), config.physics.initialSettleTime);
 
     // Reset and hide the timer
     clearInterval(timerInterval);
-    timerContainer.style.display = 'none';
-    startTimerBtn.disabled = false;
+    config.elements.timerContainer.style.display = 'none';
+    config.elements.startTimerBtn.disabled = false;
 }
 
 function checkDiceSettled() {
     diceArray.forEach((dice, index) => {
-        if (!diceSettled[index]) {
-            if (nudgeAttempts[index] < MAX_NUDGE_ATTEMPTS) {
-                console.log(`Nudging dice ${index + 1}. Attempt: ${nudgeAttempts[index] + 1}`);
+        if (!config.state.diceSettled[index]) {
+            if (config.state.nudgeAttempts[index] < config.physics.maxNudgeAttempts) {
+                console.log(`Nudging dice ${index + 1}. Attempt: ${config.state.nudgeAttempts[index] + 1}`);
                 nudgeDice(dice);
-                nudgeAttempts[index]++;
-                setTimeout(() => checkSingleDice(index), NUDGE_INTERVAL);
+                config.state.nudgeAttempts[index]++;
+                setTimeout(() => checkSingleDice(index), config.physics.nudgeInterval);
             } else {
                 console.log(`Forcing result for dice ${index + 1}`);
                 forceSettleDice(dice, index);
@@ -638,7 +615,7 @@ function checkDiceSettled() {
 }
 
 function checkSingleDice(index) {
-    if (!diceSettled[index]) {
+    if (!config.state.diceSettled[index]) {
         const score = getDiceScore(diceArray[index].body);
         if (score !== null) {
             setDiceResult(score, index);
@@ -672,8 +649,6 @@ function forceSettleDice(dice, index) {
 }
 
 function updateDiceMeshRotation(dice, score) {
-    // Set the rotation of the dice mesh based on the score
-    // This is a simplified version; you might need to adjust these rotations
     switch(score) {
         case 1: dice.mesh.rotation.set(0, 0, 0); break;
         case 2: dice.mesh.rotation.set(0, 0, Math.PI / 2); break;
@@ -685,52 +660,28 @@ function updateDiceMeshRotation(dice, score) {
     dice.body.quaternion.copy(dice.mesh.quaternion);
 }
 
-// Add this function to your render loop or call it after scene initialization
-function checkDiceMaterials() {
-    diceArray.forEach((dice, index) => {
-        console.log(`Dice ${index + 1} materials:`, dice.mesh.material);
-    });
-}
-
-// Call this function after your dice are created
-checkDiceMaterials();
-
 function applyNightMode() {
-    if (isNightMode) {
+    if (config.state.isNightMode) {
         document.documentElement.classList.add('night-mode');
     } else {
         document.documentElement.classList.remove('night-mode');
     }
     
-    // Update Three.js scene if necessary
     if (scene) {
-        scene.background = isNightMode ? new THREE.Color(0x202030) : null;
+        scene.background = config.state.isNightMode ? new THREE.Color(0x202030) : null;
     }
     if (window.lights) {
-        window.lights.ambientLight.intensity = isNightMode ? 0.3 : 0.5;
-        window.lights.topLight.intensity = isNightMode ? 0.4 : 0.5;
+        window.lights.ambientLight.intensity = config.state.isNightMode ? 0.3 : 0.5;
+        window.lights.topLight.intensity = config.state.isNightMode ? 0.4 : 0.5;
     }
 }
 
 function toggleNightMode() {
-    isNightMode = nightModeToggle.checked;
-    localStorage.setItem('nightMode', isNightMode);
+    config.state.isNightMode = config.elements.nightModeToggle.checked;
+    localStorage.setItem('nightMode', config.state.isNightMode);
     applyNightMode();
 }
 
-// In your initialization code
-document.addEventListener('DOMContentLoaded', () => {
-    // ... other initialization code ...
-    
-    // Load night mode setting
-    isNightMode = localStorage.getItem('nightMode') === 'true';
-    nightModeToggle.checked = isNightMode;
-    applyNightMode();
-    
-    // ... rest of your initialization code ...
-});
-
-// Modify the createTextDiceMesh function to accept a background color
 function createTextDiceMesh(words, backgroundColor) {
     const boxGeometry = createBoxGeometry();
     const materials = words.map(word => {
@@ -801,65 +752,39 @@ function createTextDiceMesh(words, backgroundColor) {
     return diceMesh;
 }
 
-// Add this new function
 function updateDiceVisibility() {
     diceArray.forEach((dice, index) => {
-        const isVisible = (index === 0 && dice1Checkbox.checked) ||
-                          (index === 1 && dice2Checkbox.checked) ||
-                          (index === 2 && dice3Checkbox.checked) ||
-                          (index === 3 && dice4Checkbox.checked) ||
-                          (index === 4 && dice5Checkbox.checked) ||
-                          (index === 5 && dice6Checkbox.checked);
-        
+        const isVisible = config.checkboxes[index].checked;
         dice.mesh.visible = isVisible;
-        if (!isVisible) {
-            dice.body.position.set(0, -100, 0); // Move invisible dice out of view
-            dice.mesh.position.copy(dice.body.position);
-        }
+        dice.body.position.set(isVisible ? dice.body.position.x : 0, isVisible ? dice.body.position.y : -100, isVisible ? dice.body.position.z : 0);
+        dice.mesh.position.copy(dice.body.position);
     });
 
-    // Hide timer if dice4 is not checked
-    if (!dice4Checkbox.checked) {
-        timerContainer.style.display = 'none';
-    }
+    config.elements.timerContainer.style.display = config.checkboxes[3].checked ? 'block' : 'none';
 
     positionDiceOnFloor();
 }
 
-// Modify the positionDiceOnFloor function
 function positionDiceOnFloor() {
     const faceRotations = [
-        new CANNON.Quaternion(), // Face 1 up
-        new CANNON.Quaternion().setFromEuler(0, 0, Math.PI / 2), // Face 2 up
-        new CANNON.Quaternion().setFromEuler(-Math.PI / 2, 0, 0), // Face 3 up
-        new CANNON.Quaternion().setFromEuler(Math.PI / 2, 0, 0), // Face 4 up
-        new CANNON.Quaternion().setFromEuler(0, 0, -Math.PI / 2), // Face 5 up
-        new CANNON.Quaternion().setFromEuler(Math.PI, 0, 0) // Face 6 up
+        new CANNON.Quaternion(),
+        new CANNON.Quaternion().setFromEuler(0, 0, Math.PI / 2),
+        new CANNON.Quaternion().setFromEuler(-Math.PI / 2, 0, 0),
+        new CANNON.Quaternion().setFromEuler(Math.PI / 2, 0, 0),
+        new CANNON.Quaternion().setFromEuler(0, 0, -Math.PI / 2),
+        new CANNON.Quaternion().setFromEuler(Math.PI, 0, 0)
     ];
 
     let visibleDiceCount = 0;
 
     diceArray.forEach((dice, index) => {
-        const isVisible = (index === 0 && dice1Checkbox.checked) ||
-                          (index === 1 && dice2Checkbox.checked) ||
-                          (index === 2 && dice3Checkbox.checked) ||
-                          (index === 3 && dice4Checkbox.checked) ||
-                          (index === 4 && dice5Checkbox.checked) ||
-                          (index === 5 && dice6Checkbox.checked);
-        
-        dice.mesh.visible = isVisible;
-        
-        if (isVisible) {
-            const x = (visibleDiceCount - 2) * 1.2; // Spread visible dice horizontally
-            const y = -6.5; // Position just above the floor
+        if (dice.mesh.visible) {
+            const x = (visibleDiceCount - 2) * 1.2;
+            const y = -6.5;
             const z = 0;
 
             dice.body.position.set(x, y, z);
-            
-            // Choose a random face to be up
-            const randomFace = Math.floor(Math.random() * 6);
-            dice.body.quaternion.copy(faceRotations[randomFace]);
-
+            dice.body.quaternion.copy(faceRotations[Math.floor(Math.random() * 6)]);
             dice.body.velocity.set(0, 0, 0);
             dice.body.angularVelocity.set(0, 0, 0);
 
@@ -867,29 +792,21 @@ function positionDiceOnFloor() {
             dice.mesh.quaternion.copy(dice.body.quaternion);
 
             visibleDiceCount++;
-        } else {
-            dice.body.position.set(0, -100, 0); // Move invisible dice out of view
-            dice.mesh.position.copy(dice.body.position);
         }
-    });
 
-    // Update the score display
-    diceArray.forEach((dice, index) => {
-        if (dice.mesh.visible) {
-            const score = getDiceScore(dice.body);
-            if (score !== null) {
-                setDiceResult(score, index);
-            }
-        } else {
-            diceResults[index] = '';
-            diceSettled[index] = true;
-        }
+        const score = dice.mesh.visible ? getDiceScore(dice.body) : null;
+        config.state.diceResults[index] = score !== null ? getDiceWord(index, score) : '';
+        config.state.diceSettled[index] = !dice.mesh.visible || score !== null;
     });
 
     updateScoreDisplay();
 }
 
-// Add this new function
+function getDiceWord(diceIndex, score) {
+    const words = [coupleActivityWords, locationWords, intensityPhrases, durationPhrases, femaleActivityPhrases, maleActivityPhrases][diceIndex];
+    return words[score - 1] || '';
+}
+
 function initShakeEvent() {
     myShakeEvent = new Shake({
         threshold: 15,
@@ -901,12 +818,10 @@ function initShakeEvent() {
     window.addEventListener('shake', shakeEventDidOccur, false);
 }
 
-// Add this new function
 function shakeEventDidOccur() {
     throwDice();
 }
 
-// Add this new function to handle visibility changes
 function handleVisibilityChange() {
     if (document.hidden) {
         myShakeEvent.stop();
@@ -915,52 +830,35 @@ function handleVisibilityChange() {
     }
 }
 
-// Add this function to check if the device is mobile
 function isMobileDevice() {
     return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
 }
 
-// Add this function to show the mobile shake modal
 function showMobileShakeModal() {
     if (isMobileDevice() && !localStorage.getItem('shakeModalShown')) {
-        mobileShakeModal.style.display = 'block';
+        config.elements.mobileShakeModal.style.display = 'block';
     }
 }
 
-// Add this event listener for the "Got it" button
-gotItBtn.addEventListener('click', () => {
-    mobileShakeModal.style.display = 'none';
+config.elements.gotItBtn.addEventListener('click', () => {
+    config.elements.mobileShakeModal.style.display = 'none';
     localStorage.setItem('shakeModalShown', 'true');
 });
 
-// Add event listener for the close modal button
-closeModalBtn.addEventListener('click', () => {
+config.elements.closeModalBtn.addEventListener('click', () => {
     saveSettings();
-    modal.style.display = "none";
+    config.elements.settingsModal.style.display = "none";
     updateDiceVisibility();
 });
 
-// Modify the event listeners for checkbox changes
-[dice1Checkbox, dice2Checkbox, dice3Checkbox, dice4Checkbox, dice5Checkbox, dice6Checkbox].forEach(checkbox => {
+config.checkboxes.forEach((checkbox, index) => {
     checkbox.addEventListener('change', () => {
-        if (checkbox === dice1Checkbox || checkbox === dice5Checkbox || checkbox === dice6Checkbox) {
-            // Ensure only one of dice1, dice5, and dice6 is checked
-            if (checkbox.checked) {
-                if (checkbox === dice1Checkbox) {
-                    dice5Checkbox.checked = false;
-                    dice6Checkbox.checked = false;
-                } else if (checkbox === dice5Checkbox) {
-                    dice1Checkbox.checked = false;
-                    dice6Checkbox.checked = false;
-                } else {
-                    dice1Checkbox.checked = false;
-                    dice5Checkbox.checked = false;
-                }
-            } else {
-                // If unchecking, ensure at least one is checked
-                if (!dice1Checkbox.checked && !dice5Checkbox.checked && !dice6Checkbox.checked) {
-                    checkbox.checked = true;
-                }
+        if ([0, 4, 5].includes(index)) {
+            [0, 4, 5].forEach(i => {
+                if (i !== index) config.checkboxes[i].checked = false;
+            });
+            if (!checkbox.checked && ![0, 4, 5].some(i => config.checkboxes[i].checked)) {
+                checkbox.checked = true;
             }
         }
         saveSettings();
@@ -968,9 +866,8 @@ closeModalBtn.addEventListener('click', () => {
     });
 });
 
-// Replace the existing startTimer function with these new functions
 function toggleTimer() {
-    if (!isTimerRunning) {
+    if (!config.state.isTimerRunning) {
         if (remainingTime === undefined) {
             remainingTime = timerDuration;
         }
@@ -981,10 +878,10 @@ function toggleTimer() {
 }
 
 function startTimer() {
-    isTimerRunning = true;
-    startTimerBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    startTimerBtn.setAttribute('aria-label', 'Pause');
-    resetTimerBtn.disabled = false;
+    config.state.isTimerRunning = true;
+    config.elements.startTimerBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    config.elements.startTimerBtn.setAttribute('aria-label', 'Pause');
+    config.elements.resetTimerBtn.disabled = false;
 
     timerInterval = setInterval(() => {
         remainingTime--;
@@ -993,13 +890,13 @@ function startTimer() {
         
         if (remainingTime <= 0) {
             clearInterval(timerInterval);
-            isTimerRunning = false;
-            startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
-            startTimerBtn.setAttribute('aria-label', 'Start');
-            startTimerBtn.disabled = true;
+            config.state.isTimerRunning = false;
+            config.elements.startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+            config.elements.startTimerBtn.setAttribute('aria-label', 'Start');
+            config.elements.startTimerBtn.disabled = true;
             
             // Play the done sound only if not muted
-            if (!isMuted) {
+            if (!config.state.isMuted) {
                 doneSound.play().catch(error => console.error('Error playing sound:', error));
             }
         }
@@ -1008,27 +905,27 @@ function startTimer() {
 
 function pauseTimer() {
     clearInterval(timerInterval);
-    isTimerRunning = false;
-    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
-    startTimerBtn.setAttribute('aria-label', 'Resume');
+    config.state.isTimerRunning = false;
+    config.elements.startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    config.elements.startTimerBtn.setAttribute('aria-label', 'Resume');
 }
 
 function resetTimer() {
     clearInterval(timerInterval);
-    isTimerRunning = false;
+    config.state.isTimerRunning = false;
     remainingTime = timerDuration;
     updateTimerDisplay(remainingTime);
     updateTimerProgress(remainingTime, timerDuration);
-    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
-    startTimerBtn.setAttribute('aria-label', 'Start');
-    startTimerBtn.disabled = false;
-    resetTimerBtn.disabled = true;
+    config.elements.startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    config.elements.startTimerBtn.setAttribute('aria-label', 'Start');
+    config.elements.startTimerBtn.disabled = false;
+    config.elements.resetTimerBtn.disabled = true;
 }
 
 function updateTimerDisplay(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    config.elements.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
 function updateTimerProgress(remaining, total) {
@@ -1039,32 +936,26 @@ function updateTimerProgress(remaining, total) {
     });
 }
 
-// Add this function to initialize the timer buttons
 function initializeTimerButtons() {
-    startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
-    startTimerBtn.setAttribute('aria-label', 'Start');
-    resetTimerBtn.innerHTML = '<i class="fas fa-redo"></i>';
-    resetTimerBtn.setAttribute('aria-label', 'Reset');
+    config.elements.startTimerBtn.innerHTML = '<i class="fas fa-play"></i>';
+    config.elements.startTimerBtn.setAttribute('aria-label', 'Start');
+    config.elements.resetTimerBtn.innerHTML = '<i class="fas fa-redo"></i>';
+    config.elements.resetTimerBtn.setAttribute('aria-label', 'Reset');
 }
 
-// Add this new function
 function initializeMuteButton() {
-    const muteBtn = document.getElementById('mute-btn');
-    muteBtn.addEventListener('click', toggleMute);
-    isMuted = localStorage.getItem('isMuted') === 'true';
+    config.elements.muteBtn.addEventListener('click', toggleMute);
+    config.state.isMuted = localStorage.getItem('isMuted') === 'true';
     updateMuteButtonIcon();
 }
 
-// Add this new function
 function toggleMute() {
-    isMuted = !isMuted;
-    localStorage.setItem('isMuted', isMuted);
+    config.state.isMuted = !config.state.isMuted;
+    localStorage.setItem('isMuted', config.state.isMuted);
     updateMuteButtonIcon();
 }
 
-// Add this new function
 function updateMuteButtonIcon() {
-    const muteBtn = document.getElementById('mute-btn');
-    muteBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-    muteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
+    config.elements.muteBtn.innerHTML = config.state.isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+    config.elements.muteBtn.setAttribute('aria-label', config.state.isMuted ? 'Unmute' : 'Mute');
 }
