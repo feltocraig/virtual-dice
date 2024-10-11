@@ -16,27 +16,33 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve rollup-plugin-visualizer
-      - run: npm install -g csso-cli
-      - run: npm install -g html-minifier
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve
       
-      # Use Rollup to bundle and tree shake JS files, excluding shake.js
-      - name: Bundle and tree shake JS files
+      # Bundle and minify JS files (excluding shake.js)
+      - name: Bundle and minify JS files
         run: |
+          # Create a temporary file to hold import statements
+          echo "" > ./js/temp_bundle.js
+          
+          # Generate import statements for all JS files except shake.js
           for js_file in ./js/*.js; do
             if [ "$(basename "$js_file")" != "shake.js" ]; then
-              original_size=$(wc -c < "$js_file")
-              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
-              new_size=$(wc -c < "$js_file")
-              reduction=$((original_size - new_size))
-              percent=$((reduction * 100 / original_size))
-              echo "File $js_file reduced by $reduction bytes ($percent%)"
+              echo "import '$(realpath --relative-to=./js "$js_file")';" >> ./js/temp_bundle.js
             fi
           done
+          
+          # Bundle and minify
+          rollup ./js/temp_bundle.js --file ./js/bundle.min.js --format iife --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
+          
+          # Clean up
+          rm ./js/temp_bundle.js
+          
+          # Output bundle size
+          echo "Bundle size: $(wc -c < ./js/bundle.min.js) bytes"
       
       # Minify shake.js separately
       - name: Minify shake.js
-        run: npx terser ./js/shake.js -o ./js/shake.js --compress --mangle
+        run: npx terser ./js/shake.js -o ./js/shake.min.js --compress --mangle
       
       # Use CLI tools to minify CSS, overwriting existing files
       - run: for i in ./css/*.css; do csso $i -o $i; done
@@ -44,22 +50,19 @@ jobs:
       # Rename JS files with content hash and update HTML
       - name: Rename JS files and update HTML
         run: |
-          for js_file in ./js/*.js; do
-            # Generate hash of file content
-            hash=$(md5sum "$js_file" | awk '{ print $1 }')
-            
-            # Get the filename without path
-            filename=$(basename "$js_file")
-            
-            # New filename with hash
-            new_filename="${filename%.*}.${hash:0:8}.js"
-            
-            # Rename the file
-            mv "$js_file" "./js/$new_filename"
-            
-            # Update HTML files to use new filename
-            find . -name "*.html" -type f -exec sed -i "s|$filename|$new_filename|g" {} +
-          done
+          # Handle bundle.min.js
+          bundle_hash=$(md5sum "./js/bundle.min.js" | awk '{ print $1 }')
+          mv "./js/bundle.min.js" "./js/bundle.${bundle_hash:0:8}.min.js"
+          
+          # Handle shake.min.js
+          shake_hash=$(md5sum "./js/shake.min.js" | awk '{ print $1 }')
+          mv "./js/shake.min.js" "./js/shake.${shake_hash:0:8}.min.js"
+          
+          # Update HTML files
+          find . -name "*.html" -type f -exec sed -i "s|shake\.js|shake.${shake_hash:0:8}.min.js|g" {} +
+          
+          # Replace all other .js references with the bundle
+          find . -name "*.html" -type f -exec sed -i 's|src="./js/[^"]*\.js"|src="./js/bundle.'"${bundle_hash:0:8}"'.min.js"|g' {} +
       
       # Minify HTML files
       - run: for i in ./*.html; do html-minifier --remove-comments --minify-js true --minify-css true $i -o $i; done
