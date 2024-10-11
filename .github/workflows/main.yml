@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve csso-cli
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve csso-cli html-minifier
       
       # Bundle and minify JS files (excluding shake.js)
       - name: Bundle and minify JS files
@@ -69,7 +69,8 @@ jobs:
           done
       
       # Minify HTML files
-      - run: for i in ./*.html; do html-minifier --remove-comments --minify-js true --minify-css true $i -o $i; done
+      - name: Minify HTML files
+        run: for i in ./*.html; do html-minifier --remove-comments --minify-js true --minify-css true $i -o $i; done
       
       # Push changes to `gh-pages` branch
       - run: |
