@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve csso-cli
       
       # Bundle and minify JS files (excluding shake.js)
       - name: Bundle and minify JS files
@@ -44,25 +44,29 @@ jobs:
       - name: Minify shake.js
         run: npx terser ./js/shake.js -o ./js/shake.min.js --compress --mangle
       
-      # Use CLI tools to minify CSS, overwriting existing files
-      - run: for i in ./css/*.css; do csso $i -o $i; done
+      # Use CSSO to minify CSS, overwriting existing files
+      - name: Minify CSS files
+        run: for i in ./css/*.css; do csso $i -o $i; done
       
       # Rename JS files with content hash and update HTML
       - name: Rename JS files and update HTML
         run: |
-          # Handle bundle.min.js
-          bundle_hash=$(md5sum "./js/bundle.min.js" | awk '{ print $1 }')
-          mv "./js/bundle.min.js" "./js/bundle.${bundle_hash:0:8}.min.js"
-          
-          # Handle shake.min.js
-          shake_hash=$(md5sum "./js/shake.min.js" | awk '{ print $1 }')
-          mv "./js/shake.min.js" "./js/shake.${shake_hash:0:8}.min.js"
-          
-          # Update HTML files
-          find . -name "*.html" -type f -exec sed -i "s|shake\.js|shake.${shake_hash:0:8}.min.js|g" {} +
-          
-          # Replace all other .js references with the bundle
-          find . -name "*.html" -type f -exec sed -i 's|src="./js/[^"]*\.js"|src="./js/bundle.'"${bundle_hash:0:8}"'.min.js"|g' {} +
+          for js_file in ./js/*.js; do
+            # Generate hash of file content
+            hash=$(md5sum "$js_file" | awk '{ print $1 }')
+            
+            # Get the filename without path
+            filename=$(basename "$js_file")
+            
+            # New filename with hash
+            new_filename="${filename%.*}.${hash:0:8}.js"
+            
+            # Rename the file
+            mv "$js_file" "./js/$new_filename"
+            
+            # Update HTML files to use new filename
+            find . -name "*.html" -type f -exec sed -i "s|$filename|$new_filename|g" {} +
+          done
       
       # Minify HTML files
       - run: for i in ./*.html; do html-minifier --remove-comments --minify-js true --minify-css true $i -o $i; done
