@@ -20,13 +20,14 @@ jobs:
       - run: npm install -g csso-cli
       - run: npm install -g html-minifier
       
-      # Use webpack to bundle and tree shake JS files, excluding shake.js
+      # Use webpack to bundle and tree shake JS files, excluding shake.js and cannon-es.js
       - name: Bundle and tree shake JS files
         run: |
           for js_file in ./js/*.js; do
-            if [ "$(basename "$js_file")" != "shake.js" ]; then
+            filename=$(basename "$js_file")
+            if [ "$filename" != "shake.js" ] && [ "$filename" != "cannon-es.js" ]; then
               original_size=$(wc -c < "$js_file")
-              webpack $js_file -o $js_file --mode production --optimization-minimize --devtool hidden-source-map
+              webpack "$js_file" --output-path ./js --output-filename "$filename" --mode production --optimization-minimize --devtool hidden-source-map
               new_size=$(wc -c < "$js_file")
               reduction=$((original_size - new_size))
               percent=$((reduction * 100 / original_size))
@@ -34,9 +35,11 @@ jobs:
             fi
           done
       
-      # Minify shake.js separately
-      - name: Minify shake.js
-        run: npx terser ./js/shake.js -o ./js/shake.js
+      # Minify shake.js and cannon-es.js separately
+      - name: Minify shake.js and cannon-es.js
+        run: |
+          npx terser ./js/shake.js -o ./js/shake.js
+          npx terser ./js/cannon-es.js -o ./js/cannon-es.js
       
       # Use CLI tools to minify CSS, overwriting existing files
       - run: for i in ./css/*.css; do csso $i -o $i; done
