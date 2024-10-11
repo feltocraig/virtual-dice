@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve rollup-plugin-visualizer
       - run: npm install -g csso-cli
       - run: npm install -g html-minifier
       
@@ -25,7 +25,12 @@ jobs:
         run: |
           for js_file in ./js/*.js; do
             if [ "$(basename "$js_file")" != "shake.js" ]; then
-              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
+              original_size=$(wc -c < "$js_file")
+              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser --plugin visualizer --verbose
+              new_size=$(wc -c < "$js_file")
+              reduction=$((original_size - new_size))
+              percent=$((reduction * 100 / original_size))
+              echo "File $js_file reduced by $reduction bytes ($percent%)"
             fi
           done
       
