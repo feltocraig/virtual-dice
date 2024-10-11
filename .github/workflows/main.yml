@@ -16,12 +16,24 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g terser
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve
       - run: npm install -g csso-cli
       - run: npm install -g html-minifier
       
-      # Use CLI tools to minify, overwriting existing files
-      - run: for i in ./js/*.js; do terser $i --compress -o $i; done
+      # Use Rollup to bundle and tree shake JS files, excluding shake.js
+      - name: Bundle and tree shake JS files
+        run: |
+          for js_file in ./js/*.js; do
+            if [ "$(basename "$js_file")" != "shake.js" ]; then
+              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
+            fi
+          done
+      
+      # Minify shake.js separately
+      - name: Minify shake.js
+        run: npx terser ./js/shake.js -o ./js/shake.js
+      
+      # Use CLI tools to minify CSS, overwriting existing files
       - run: for i in ./css/*.css; do csso $i -o $i; done
       
       # Rename JS files with content hash and update HTML
