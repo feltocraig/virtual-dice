@@ -26,7 +26,7 @@ jobs:
           for js_file in ./js/*.js; do
             if [ "$(basename "$js_file")" != "shake.js" ]; then
               original_size=$(wc -c < "$js_file")
-              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser --plugin visualizer --verbose
+              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
               new_size=$(wc -c < "$js_file")
               reduction=$((original_size - new_size))
               percent=$((reduction * 100 / original_size))
@@ -36,7 +36,7 @@ jobs:
       
       # Minify shake.js separately
       - name: Minify shake.js
-        run: npx terser ./js/shake.js -o ./js/shake.js
+        run: npx terser ./js/shake.js -o ./js/shake.js --compress --mangle
       
       # Use CLI tools to minify CSS, overwriting existing files
       - run: for i in ./css/*.css; do csso $i -o $i; done
