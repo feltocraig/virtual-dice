@@ -16,37 +16,30 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve csso-cli html-minifier
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve rollup-plugin-visualizer
+      - run: npm install -g csso-cli
+      - run: npm install -g html-minifier
       
-      # Bundle and minify JS files (excluding shake.js)
-      - name: Bundle and minify JS files
+      # Use Rollup to bundle and tree shake JS files, excluding shake.js
+      - name: Bundle and tree shake JS files
         run: |
-          # Create a temporary file to hold import statements
-          echo "" > ./js/temp_bundle.js
-          
-          # Generate import statements for all JS files except shake.js
           for js_file in ./js/*.js; do
             if [ "$(basename "$js_file")" != "shake.js" ]; then
-              echo "import '$(realpath --relative-to=./js "$js_file")';" >> ./js/temp_bundle.js
+              original_size=$(wc -c < "$js_file")
+              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
+              new_size=$(wc -c < "$js_file")
+              reduction=$((original_size - new_size))
+              percent=$((reduction * 100 / original_size))
+              echo "File $js_file reduced by $reduction bytes ($percent%)"
             fi
           done
-          
-          # Bundle and minify
-          rollup ./js/temp_bundle.js --file ./js/bundle.min.js --format iife --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser
-          
-          # Clean up
-          rm ./js/temp_bundle.js
-          
-          # Output bundle size
-          echo "Bundle size: $(wc -c < ./js/bundle.min.js) bytes"
       
       # Minify shake.js separately
       - name: Minify shake.js
-        run: npx terser ./js/shake.js -o ./js/shake.min.js --compress --mangle
+        run: npx terser ./js/shake.js -o ./js/shake.js --compress --mangle
       
-      # Use CSSO to minify CSS, overwriting existing files
-      - name: Minify CSS files
-        run: for i in ./css/*.css; do csso $i -o $i; done
+      # Use CLI tools to minify CSS, overwriting existing files
+      - run: for i in ./css/*.css; do csso $i -o $i; done
       
       # Rename JS files with content hash and update HTML
       - name: Rename JS files and update HTML
@@ -69,8 +62,7 @@ jobs:
           done
       
       # Minify HTML files
-      - name: Minify HTML files
-        run: for i in ./*.html; do html-minifier --remove-comments --minify-js true --minify-css true $i -o $i; done
+      - run: for i in ./*.html; do html-minifier --remove-comments --minify-js true --minify-css true $i -o $i; done
       
       # Push changes to `gh-pages` branch
       - run: |
