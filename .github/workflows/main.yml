@@ -16,18 +16,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm install -g webpack webpack-cli terser-webpack-plugin
+      - run: npm install -g rollup @rollup/plugin-terser @rollup/plugin-node-resolve rollup-plugin-visualizer
       - run: npm install -g csso-cli
       - run: npm install -g html-minifier
       
-      # Use webpack to bundle and tree shake JS files, excluding shake.js and cannon-es.js
+      # Use Rollup to bundle and tree shake JS files, excluding shake.js
       - name: Bundle and tree shake JS files
         run: |
           for js_file in ./js/*.js; do
-            filename=$(basename "$js_file")
-            if [ "$filename" != "shake.js" ] && [ "$filename" != "cannon-es.js" ]; then
+            if [ "$(basename "$js_file")" != "shake.js" ]; then
               original_size=$(wc -c < "$js_file")
-              webpack "$js_file" --output-path ./js --output-filename "$filename" --mode production --optimization-minimize --devtool hidden-source-map
+              rollup $js_file --file $js_file --format es --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-terser --plugin visualizer --verbose
               new_size=$(wc -c < "$js_file")
               reduction=$((original_size - new_size))
               percent=$((reduction * 100 / original_size))
@@ -35,11 +34,9 @@ jobs:
             fi
           done
       
-      # Minify shake.js and cannon-es.js separately
-      - name: Minify shake.js and cannon-es.js
-        run: |
-          npx terser ./js/shake.js -o ./js/shake.js
-          npx terser ./js/cannon-es.js -o ./js/cannon-es.js
+      # Minify shake.js separately
+      - name: Minify shake.js
+        run: npx terser ./js/shake.js -o ./js/shake.js
       
       # Use CLI tools to minify CSS, overwriting existing files
       - run: for i in ./css/*.css; do csso $i -o $i; done
