@@ -1,7 +1,22 @@
 import * as CANNON from 'cannon-es';
 
-import * as THREE from 'three';
-import { TextureLoader } from 'three';
+import { 
+    WebGLRenderer, 
+    PerspectiveCamera, 
+    Scene, 
+    AmbientLight, 
+    PointLight, 
+    Mesh, 
+    PlaneGeometry, 
+    ShadowMaterial, 
+    Vector3, 
+    BoxGeometry, 
+    MeshStandardMaterial, 
+    CanvasTexture,
+    Color,
+    TextureLoader,
+    DoubleSide
+} from 'three';
 
 const config = {
     diceCount: 6,
@@ -117,7 +132,12 @@ function loadTexture(url, index) {
         url,
         (texture) => {
             console.log(`Texture ${index + 1} loaded successfully`);
-            texture.colorSpace = THREE.SRGBColorSpace;
+            // Check if colorSpace exists, otherwise fall back to encoding
+            if (texture.colorSpace !== undefined) {
+                texture.colorSpace = 'srgb';
+            } else if (texture.encoding !== undefined) {
+                texture.encoding = 3001; // THREE.sRGBEncoding
+            }
         },
         undefined,
         (err) => {
@@ -254,7 +274,7 @@ function createDiceMeshes() {
 
 function initScene() {
 
-    renderer = new THREE.WebGLRenderer({
+    renderer = new WebGLRenderer({
         alpha: true,
         antialias: true,
         canvas: config.elements.canvas
@@ -262,17 +282,17 @@ function initScene() {
     renderer.shadowMap.enabled = true
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    scene = new THREE.Scene();
+    scene = new Scene();
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, .1, 300)
+    camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, .1, 300)
     camera.position.set(0, 10, 5);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(new Vector3(0, 0, 0));
 
     updateSceneSize();
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, .5);
+    const ambientLight = new AmbientLight(0xffffff, .5);
     scene.add(ambientLight);
-    const topLight = new THREE.PointLight(0xffffff, .5);
+    const topLight = new PointLight(0xffffff, .5);
     topLight.position.set(10, 15, 0);
     topLight.castShadow = true;
     topLight.shadow.mapSize.width = 2048;
@@ -343,15 +363,15 @@ function addBoundaries() {
 }
 
 function createFloor() {
-    const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(1000, 1000),
-        new THREE.ShadowMaterial({
+    const floor = new Mesh(
+        new PlaneGeometry(1000, 1000),
+        new ShadowMaterial({
             opacity: .1
         })
     )
     floor.receiveShadow = true;
     floor.position.y = -7;
-    floor.quaternion.setFromAxisAngle(new THREE.Vector3(-1, 0, 0), Math.PI * .5);
+    floor.quaternion.setFromAxisAngle(new Vector3(-1, 0, 0), Math.PI * .5);
     scene.add(floor);
 
     const floorBody = new CANNON.Body({
@@ -366,31 +386,31 @@ function createFloor() {
 function createDiceMesh(textures) {
     const boxGeometry = createBoxGeometry();
     const materials = textures.map((texture, index) => {
-        return new THREE.MeshStandardMaterial({ 
+        return new MeshStandardMaterial({ 
             map: texture,
             transparent: true,
-            side: THREE.DoubleSide,
+            side: DoubleSide,
             color: 0xffffff,
         });
     });
     
-    const diceMesh = new THREE.Mesh(boxGeometry, materials);
+    const diceMesh = new Mesh(boxGeometry, materials);
     diceMesh.castShadow = true;
     
     return diceMesh;
 }
 
 function createBoxGeometry() {
-    let boxGeometry = new THREE.BoxGeometry(1, 1, 1, config.params.segments, config.params.segments, config.params.segments);
+    let boxGeometry = new BoxGeometry(1, 1, 1, config.params.segments, config.params.segments, config.params.segments);
 
     const positionAttr = boxGeometry.attributes.position;
     const subCubeHalfSize = .5 - config.params.edgeRadius;
 
     for (let i = 0; i < positionAttr.count; i++) {
-        let position = new THREE.Vector3().fromBufferAttribute(positionAttr, i);
+        let position = new Vector3().fromBufferAttribute(positionAttr, i);
 
-        const subCube = new THREE.Vector3(Math.sign(position.x), Math.sign(position.y), Math.sign(position.z)).multiplyScalar(subCubeHalfSize);
-        const addition = new THREE.Vector3().subVectors(position, subCube);
+        const subCube = new Vector3(Math.sign(position.x), Math.sign(position.y), Math.sign(position.z)).multiplyScalar(subCubeHalfSize);
+        const addition = new Vector3().subVectors(position, subCube);
 
         if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
             addition.normalize().multiplyScalar(config.params.edgeRadius);
@@ -668,7 +688,7 @@ function applyNightMode() {
     }
     
     if (scene) {
-        scene.background = config.state.isNightMode ? new THREE.Color(0x202030) : null;
+        scene.background = config.state.isNightMode ? new Color(0x202030) : null;
     }
     if (window.lights) {
         window.lights.ambientLight.intensity = config.state.isNightMode ? 0.3 : 0.5;
@@ -738,15 +758,15 @@ function createTextDiceMesh(words, backgroundColor) {
             context.fillText(line.trim(), 64, startY + index * fontSize * lineHeight);
         });
         
-        const texture = new THREE.CanvasTexture(canvas);
-        return new THREE.MeshStandardMaterial({ 
+        const texture = new CanvasTexture(canvas);
+        return new MeshStandardMaterial({ 
             map: texture,
             transparent: true,
-            side: THREE.DoubleSide,
+            side: DoubleSide,
         });
     });
     
-    const diceMesh = new THREE.Mesh(boxGeometry, materials);
+    const diceMesh = new Mesh(boxGeometry, materials);
     diceMesh.castShadow = true;
     
     return diceMesh;
