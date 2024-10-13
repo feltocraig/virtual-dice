@@ -126,6 +126,7 @@ const maleActivityPhrases = ['Play with his balls', 'Give him a hand job', 'Give
 // 4. Communication Dice: This dice could include suggestions for different types of communication during sex, such as dirty talk, moaning, or giving feedback.
 // 5. Sensory Dice: This dice could include suggestions for different types of sensory experiences during sex, such as blindfolding, using ice or heat, or using flavored lube.
 
+let sharedBoxGeometry;
 
 function loadTexture(url, index) {
     return textureLoader.load(
@@ -401,6 +402,8 @@ function createDiceMesh(textures) {
 }
 
 function createBoxGeometry() {
+    if (sharedBoxGeometry) return sharedBoxGeometry;
+
     let boxGeometry = new BoxGeometry(1, 1, 1, config.params.segments, config.params.segments, config.params.segments);
 
     const positionAttr = boxGeometry.attributes.position;
@@ -437,6 +440,7 @@ function createBoxGeometry() {
 
     boxGeometry.computeVertexNormals();
 
+    sharedBoxGeometry = boxGeometry;
     return boxGeometry;
 }
 
