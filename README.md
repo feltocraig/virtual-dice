@@ -27,3 +27,11 @@ Then open http://localhost:8000/ in your browser. HMR picks up edits automatical
 - `src/SettingsModal.jsx` — dice picker, face editor, look, presets
 - `src/TweaksPanel.jsx` — design-time tweaks (accent, mood, etc.)
 - `src/shade.js` — color helper
+
+## Deployment
+
+Hosted at **[virtualsexdice.com](https://virtualsexdice.com/)** via GitHub Pages.
+
+Every push to `main` triggers `.github/workflows/deploy.yml`, which runs `npm ci && npm run build`, writes the `CNAME` for the custom domain, and force-pushes the resulting `dist/` to the `gh-pages` branch. GitHub Pages is configured to serve from `gh-pages` / root.
+
+No manual release step — merging to `main` is the release.
