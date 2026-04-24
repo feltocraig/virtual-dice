@@ -20,7 +20,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/src/main.jsx)",
       "Bash(curl -s http://localhost:8001/es/)",
       "Bash(curl -s http://localhost:8001/)",
-      "WebFetch(domain:en.wikipedia.org)"
+      "WebFetch(domain:en.wikipedia.org)",
+      "Bash(git rm *)"
     ]
   }
 }
