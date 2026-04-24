@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import MainScreen from './MainScreen.jsx';
 import SettingsModal from './SettingsModal.jsx';
 import TweaksPanel from './TweaksPanel.jsx';
+import AgeGate from './AgeGate.jsx';
 import { useI18n } from './i18n.jsx';
 import { useShakeToThrow } from './useShakeToThrow.js';
 
@@ -232,6 +233,8 @@ function App() {
       color: '#F4ECE0',
       fontFamily: '"Inter", -apple-system, system-ui, sans-serif',
     }}>
+      <AgeGate />
+
       {/* Grain overlay */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.06, mixBlendMode: 'overlay',

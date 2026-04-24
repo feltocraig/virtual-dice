@@ -17,16 +17,23 @@
 
   "seoFallback": {
     "eyebrow": "Virtual Sex Dice",
-    "heading": "Dés Sexuels en Ligne pour Couples — Gratuit, Sans Inscription",
-    "lede": "Un jeu de dés 3D gratuit dans le navigateur pour couples. Cinq dés personnalisables roulent avec une vraie physique — la face qui reste en haut forme la consigne du soir : une action, une partie du corps, une durée, une intensité, une position, une ambiance.",
-    "body": "Sans inscription. Sans suivi. Sans téléchargement. Le jeu fonctionne entièrement dans ton navigateur sur tout appareil moderne. Choisis un preset Doux, Épicé ou Sauvage, ou construis ton propre set et édite chaque face. Fonctionne aussi bien en solo, en personne ou à distance via partage d'écran.",
+    "heading": "Un Jeu de Dés pour Couples — Pimentez les Choses Ensemble",
+    "lede": "Un jeu de dés 3D interactif pour couples. Lancez les dés et laissez-les planter le décor — une activité, un lieu, une intensité, une durée.",
+    "body": "Une façon ludique de laisser le hasard mener la soirée. Personnalisez chaque face pour qu'elle vous ressemble, ou lancez-vous simplement. Fonctionne sur tout appareil moderne — téléphone, tablette ou ordinateur.",
     "bullets": [
       "Vraie physique 3D — les dés roulent, se heurtent et s'immobilisent réellement",
-      "Six catégories : action, partie du corps, durée, intensité, position, ambiance",
-      "Presets Doux, Épicé et Sauvage, ou dés entièrement personnalisés",
-      "Privé par défaut — pas de compte, pas de suivi, fonctionne hors ligne après le premier chargement"
+      "Personnalisez chaque face pour coller à votre relation",
+      "Secouez le téléphone pour lancer, ou touchez pour jeter",
+      "Disponible en anglais, espagnol, allemand, français et italien"
     ],
     "noscript": "Ce jeu nécessite JavaScript et WebGL pour afficher les dés 3D. Active JavaScript dans ton navigateur, ou ouvre virtualsexdice.com dans un navigateur moderne comme Chrome, Safari, Firefox ou Edge."
+  },
+
+  "ageGate": {
+    "title": "Réservé aux adultes",
+    "body": "Ce site est destiné à un public adulte. En continuant, vous confirmez avoir 18 ans ou plus.",
+    "confirm": "J'ai 18 ans ou plus",
+    "decline": "Quitter"
   },
 
   "ui": {

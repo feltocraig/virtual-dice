@@ -17,16 +17,23 @@
 
   "seoFallback": {
     "eyebrow": "Virtual Sex Dice",
-    "heading": "Dadi Sexy Online per Coppie — Gratis, Senza Registrazione",
-    "lede": "Un gioco di dadi 3D gratuito nel browser per coppie. Cinque dadi personalizzabili rotolano con fisica reale — la faccia che resta in alto forma la consegna della serata: un'azione, una parte del corpo, una durata, un'intensità, una posizione, un'atmosfera.",
-    "body": "Senza registrazione. Senza tracciamento. Senza download. Il gioco funziona interamente nel tuo browser su qualsiasi dispositivo moderno. Scegli un preset Dolce, Piccante o Selvaggio, o costruisci il tuo set e modifica ogni faccia. Funziona bene sia in solitaria, di persona o a distanza via condivisione schermo.",
+    "heading": "Un Gioco di Dadi per Coppie — Ravvivate le Cose Insieme",
+    "lede": "Un gioco di dadi 3D interattivo per coppie. Lanciate i dadi e lasciate che diano il tono — un'attività, un luogo, un'intensità, una durata.",
+    "body": "Un modo giocoso di lasciare che sia il caso a guidare la serata. Personalizzate ogni faccia per adattarla a voi due, o tuffatevi subito. Funziona su qualsiasi dispositivo moderno — telefono, tablet o portatile.",
     "bullets": [
       "Vera fisica 3D — i dadi rotolano, si scontrano e si fermano davvero",
-      "Sei categorie: azione, parte del corpo, durata, intensità, posizione, atmosfera",
-      "Preset Dolce, Piccante e Selvaggio, o dadi completamente personalizzati",
-      "Privato per impostazione predefinita — nessun account, nessun tracciamento, funziona offline dopo il primo caricamento"
+      "Personalizzate ogni faccia per adattarla alla vostra relazione",
+      "Scuoti il telefono per lanciare, o tocca per gettare",
+      "Disponibile in inglese, spagnolo, tedesco, francese e italiano"
     ],
     "noscript": "Questo gioco richiede JavaScript e WebGL per renderizzare i dadi 3D. Attiva JavaScript nel tuo browser, o apri virtualsexdice.com in un browser moderno come Chrome, Safari, Firefox o Edge."
+  },
+
+  "ageGate": {
+    "title": "Solo per adulti",
+    "body": "Questo sito è destinato a un pubblico adulto. Continuando, confermi di avere 18 anni o più.",
+    "confirm": "Ho 18 anni o più",
+    "decline": "Esci"
   },
 
   "ui": {

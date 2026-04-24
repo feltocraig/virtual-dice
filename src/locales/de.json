@@ -17,16 +17,23 @@
 
   "seoFallback": {
     "eyebrow": "Virtual Sex Dice",
-    "heading": "Sex-Würfel Online für Paare — Kostenlos, Kein Login",
-    "lede": "Ein kostenloses, browserbasiertes 3D-Würfelspiel für Paare. Fünf anpassbare Würfel rollen mit echter Physik — welche Seite oben landet, bildet die Aufgabe für heute Nacht: eine Handlung, ein Körperteil, eine Dauer, eine Intensität, eine Position, eine Stimmung.",
-    "body": "Kein Login. Kein Tracking. Kein Download. Das Spiel läuft komplett im Browser auf jedem modernen Gerät. Wähle ein Sanft-, Würzig- oder Wild-Preset, oder bau dein eigenes Set und bearbeite jede Seite. Funktioniert genauso gut solo, persönlich oder per Bildschirmfreigabe auf Distanz.",
+    "heading": "Ein Würfelspiel für Paare — Peppt es gemeinsam auf",
+    "lede": "Ein interaktives 3D-Würfelspiel für Paare. Werft die Würfel und lasst sie die Stimmung setzen — eine Aktivität, ein Ort, eine Intensität, eine Dauer.",
+    "body": "Eine verspielte Art, den Zufall den Abend leiten zu lassen. Passt jede Seite an euch an oder legt einfach los. Funktioniert auf jedem modernen Gerät — Handy, Tablet oder Laptop.",
     "bullets": [
       "Echte 3D-Physik — Würfel rollen, stoßen und kommen wirklich zur Ruhe",
-      "Sechs Kategorien: Handlung, Körperteil, Dauer, Intensität, Position, Stimmung",
-      "Sanft-, Würzig- und Wild-Presets oder vollständig anpassbare Würfel",
-      "Privat von Haus aus — kein Konto, kein Tracking, offline nach dem ersten Laden"
+      "Passt jede Seite an eure Beziehung an",
+      "Schüttelt das Handy zum Würfeln oder tippt zum Werfen",
+      "Verfügbar auf Englisch, Spanisch, Deutsch, Französisch und Italienisch"
     ],
     "noscript": "Dieses Spiel benötigt JavaScript und WebGL, um die 3D-Würfel zu rendern. Aktiviere JavaScript in deinem Browser oder öffne virtualsexdice.com in einem modernen Browser wie Chrome, Safari, Firefox oder Edge."
+  },
+
+  "ageGate": {
+    "title": "Nur für Erwachsene",
+    "body": "Diese Seite ist für Erwachsene bestimmt. Indem du fortfährst, bestätigst du, dass du 18 Jahre oder älter bist.",
+    "confirm": "Ich bin 18 oder älter",
+    "decline": "Verlassen"
   },
 
   "ui": {

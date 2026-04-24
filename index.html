@@ -15,16 +15,22 @@
   <meta property="og:description" content="{{OG_DESCRIPTION}}">
   <meta property="og:url" content="{{CANONICAL}}">
   <meta property="og:image" content="https://virtualsexdice.com/og-image.jpg">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="Virtual Sex Dice — 3D dice mid-roll">
   <meta property="og:locale" content="{{OG_LOCALE}}">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{TWITTER_TITLE}}">
   <meta name="twitter:description" content="{{TWITTER_DESCRIPTION}}">
   <meta name="twitter:image" content="https://virtualsexdice.com/og-image.jpg">
+  <meta name="twitter:image:alt" content="Virtual Sex Dice — 3D dice mid-roll">
 
   {{HREFLANG_LINKS}}
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -34,6 +40,13 @@
   {
     "@context": "https://schema.org",
     "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://virtualsexdice.com/#org",
+        "name": "Virtual Sex Dice",
+        "url": "https://virtualsexdice.com/",
+        "logo": "https://virtualsexdice.com/og-image.jpg"
+      },
       {
         "@type": "WebApplication",
         "@id": "{{CANONICAL}}#webapp",

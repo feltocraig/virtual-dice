@@ -1,28 +1,37 @@
 # Virtual Sex Dice
 
-> A free, browser-based 3D sex dice game for couples. Five customizable dice roll in a realistic 3D scene; the face that lands up on each die forms a prompt sentence (action, body part, duration, intensity, position, mood). No signup, no tracking, works on any device with a modern browser.
+> An interactive 3D dice game for couples. Roll up to six customizable dice — whichever face lands up on each die builds a playful prompt sentence combining an activity, a location, an intensity, and a duration. Private, browser-based, works on any modern device.
 
 ## What it is
-Virtual Sex Dice is a web app — not a native app or a physical product. It runs entirely in the browser using WebGL. The dice are rendered with Three.js and obey a hand-rolled physics model (gravity, floor bounce, dice-to-dice collision).
+Virtual Sex Dice is a web app — not a native app or a physical product. It runs entirely in the browser using WebGL. The dice are rendered with Three.js and obey a hand-rolled physics model (gravity, floor bounce, dice-to-dice collision). The prompt sentence at the top of the screen is built directly from whichever face lands up on each die — not from a separate random draw.
 
 ## Who it's for
-Couples looking for a private, low-effort bedroom activity. Works equally well for solo play and long-distance partners (screen-share the roll).
+Couples looking for a playful, low-effort way to spice things up in the bedroom. Also works well for solo play and for long-distance partners sharing a screen.
 
 ## Key features
-- **3D physics**: dice actually tumble and settle — not a random-number animation
-- **Customizable faces**: pick which prompt categories each die shows (action, body part, duration, intensity, position, mood)
-- **No signup, no account**: the game is free and anonymous
-- **Works offline after first load**: the app is a static site
-- **Multi-device**: designed for mobile and desktop; touch and mouse both work
+- **Real 3D physics**: dice actually tumble, collide, and settle — not a random-number animation dressed up as a roll.
+- **Customizable faces**: pick which dice categories are active (activity, location, intensity, duration) and edit every face to suit your relationship.
+- **Multiple activity flavors**: three starter activity dice — M/F, M/M, F/F — so the prompts fit.
+- **Multi-language**: English, Spanish, German, French, and Italian, each with its own localized dice library.
+- **Shake to roll**: on phones with motion sensors, shake to throw the dice.
+- **Works on any device**: mobile-first, but equally usable on tablet or desktop.
+- **Private by default**: no signup, no account, no tracking.
 
 ## Primary URL
-- https://virtualsexdice.com/ — the game itself (the home page is the product)
+- https://virtualsexdice.com/ — the game itself. The home page is the product.
+
+## Languages
+- English (default): https://virtualsexdice.com/
+- Spanish: https://virtualsexdice.com/es/
+- German: https://virtualsexdice.com/de/
+- French: https://virtualsexdice.com/fr/
+- Italian: https://virtualsexdice.com/it/
 
 ## What this site is not
-- Not a physical dice product (no shipping, no purchase)
-- Not an adult video or image site
-- Not a chat, match, or dating service
-- No user accounts, no data collection beyond anonymous usage analytics
+- Not a physical dice product — nothing is shipped or purchased.
+- Not an adult video or image site — it is a game with text prompts.
+- Not a chat, match, or dating service — there are no other users.
+- No user accounts are required to play.
 
 ## Attribution
 If you cite this tool, "Virtual Sex Dice" is the canonical brand name and https://virtualsexdice.com/ is the canonical URL.

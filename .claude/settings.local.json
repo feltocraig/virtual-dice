@@ -22,7 +22,12 @@
       "Bash(curl -s http://localhost:8001/)",
       "WebFetch(domain:en.wikipedia.org)",
       "Bash(git rm *)",
-      "Bash(git ls-remote *)"
+      "Bash(git ls-remote *)",
+      "Bash(node *)",
+      "Bash(npx --yes pngquant --quality=85-95 public/icon-512.png --output public/icon-512.png --force)",
+      "Bash(npx --yes pngquant --quality=85-95 public/icon-192.png --output public/icon-192.png --force)",
+      "Bash(npx --yes pngquant --quality=85-95 public/icon-maskable-512.png --output public/icon-maskable-512.png --force)",
+      "Bash(npx --yes pngquant-bin --help)"
     ]
   }
 }

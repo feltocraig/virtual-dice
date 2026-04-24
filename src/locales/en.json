@@ -17,16 +17,23 @@
 
   "seoFallback": {
     "eyebrow": "Virtual Sex Dice",
-    "heading": "Online Sex Dice for Couples — Free, No Signup",
-    "lede": "A free, browser-based 3D dice game for couples. Five customizable dice tumble with real physics — whichever face lands up forms tonight's prompt: an action, a body part, a duration, an intensity, a position, a mood.",
-    "body": "No signup. No tracking. No download. The game runs entirely in your browser on any modern device. Pick a Sweet, Spicy, or Wild preset, or build your own deck and edit every face. Works equally well for solo play, in-person, or long-distance over a screen share.",
+    "heading": "A Dice Game for Couples — Spice Things Up Together",
+    "lede": "An interactive 3D dice game for couples. Roll the dice and let them set the scene — an activity, a location, an intensity, a duration.",
+    "body": "A playful way to let chance lead the way tonight. Customize every face to suit the two of you, or jump straight in. Works on any modern device — phone, tablet, or laptop.",
     "bullets": [
       "Real 3D physics — dice actually tumble, collide, and settle",
-      "Six categories: action, body part, duration, intensity, position, mood",
-      "Sweet, Spicy, and Wild presets, or fully custom dice",
-      "Private by default — no account, no tracking, works offline after first load"
+      "Customize every face to fit your relationship",
+      "Shake your phone to roll, or tap to throw",
+      "Available in English, Spanish, German, French, and Italian"
     ],
     "noscript": "This game needs JavaScript and WebGL to render the 3D dice. Enable JavaScript in your browser, or open virtualsexdice.com in a modern browser like Chrome, Safari, Firefox, or Edge."
+  },
+
+  "ageGate": {
+    "title": "Adults Only",
+    "body": "This site is intended for adults. By continuing, you confirm you are 18 years of age or older.",
+    "confirm": "I'm 18 or older",
+    "decline": "Leave"
   },
 
   "ui": {
