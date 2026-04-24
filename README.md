@@ -1,32 +1,29 @@
-# Based on
+# Dice Game
 
-[Article on Codrops](https://tympanus.net/codrops/?p=69521)
+A 3D dice game built with React, Three.js, and Vite.
 
-[Demo](http://tympanus.net/Tutorials/DiceRoller/)
+## Running
 
-## Installation
+```bash
+npm install
+npm run dev
+```
 
-No package manager / build system is needed.
-You can run the page as it is on local server (any web server, really).
+Then open http://localhost:8000/ in your browser. HMR picks up edits automatically — no hard refresh needed.
 
-The page is using the following libs:
+## Scripts
 
-1) Three.js + their addons OrbitControls and mergeBufferGeometries.
-   https://threejs.org/docs/#manual/en/introduction/Installation
+- `npm run dev` — start the dev server
+- `npm run build` — produce a production build in `dist/`
+- `npm run preview` — serve the production build locally
 
-2) cannon-es
-   https://github.com/pmndrs/cannon-es
+## Structure
 
-Both tools are added as JS modules via CDN with import map. Other installation options are available (see the links above)
-
-## SVGS
-https://thenounproject.com/
-
-## Infra
-Squarespace Domain
-Cloudflare DNS
-
-Github Actions -> Minifies css and js -> Publishes to `gh-pages` branch
-Cloudflare Pages looks at the `gh-pages` branch and publishes automatically
-
-https://virtualsexdice.com
+- `index.html` — Vite entry shell
+- `src/main.jsx` — React root
+- `src/App.jsx` — root component; game state and prompt builder
+- `src/DiceScene.jsx` — Three.js 3D dice, physics, collision, face detection
+- `src/MainScreen.jsx` — prompt header, throw button, timer
+- `src/SettingsModal.jsx` — dice picker, face editor, look, presets
+- `src/TweaksPanel.jsx` — design-time tweaks (accent, mood, etc.)
+- `src/shade.js` — color helper

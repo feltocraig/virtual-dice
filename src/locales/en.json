@@ -1,0 +1,144 @@
+{
+  "locale": "en",
+  "htmlLang": "en",
+  "name": "English",
+
+  "meta": {
+    "title": "Sex Dice Online — Free 3D Dice Game for Couples | Virtual Sex Dice",
+    "description": "Play sex dice online free. Real 3D physics, customizable faces, works on any device. No signup. For couples, solo, or long-distance.",
+    "ogTitle": "Sex Dice Online — Free 3D Dice Game for Couples",
+    "ogDescription": "Play sex dice online free. Real 3D physics, customizable faces, works on any device. No signup. For couples, solo, or long-distance.",
+    "ogSiteName": "Virtual Sex Dice",
+    "twitterTitle": "Sex Dice Online — Free 3D Dice Game for Couples",
+    "twitterDescription": "Play sex dice online free. Real 3D physics, customizable faces, works on any device. No signup.",
+    "schemaName": "Virtual Sex Dice",
+    "schemaDescription": "Free, browser-based 3D sex dice game for couples. Customizable faces, no signup, works on any device."
+  },
+
+  "seoFallback": {
+    "eyebrow": "Virtual Sex Dice",
+    "heading": "Online Sex Dice for Couples — Free, No Signup",
+    "lede": "A free, browser-based 3D dice game for couples. Five customizable dice tumble with real physics — whichever face lands up forms tonight's prompt: an action, a body part, a duration, an intensity, a position, a mood.",
+    "body": "No signup. No tracking. No download. The game runs entirely in your browser on any modern device. Pick a Sweet, Spicy, or Wild preset, or build your own deck and edit every face. Works equally well for solo play, in-person, or long-distance over a screen share.",
+    "bullets": [
+      "Real 3D physics — dice actually tumble, collide, and settle",
+      "Six categories: action, body part, duration, intensity, position, mood",
+      "Sweet, Spicy, and Wild presets, or fully custom dice",
+      "Private by default — no account, no tracking, works offline after first load"
+    ],
+    "noscript": "This game needs JavaScript and WebGL to render the 3D dice. Enable JavaScript in your browser, or open virtualsexdice.com in a modern browser like Chrome, Safari, Firefox, or Edge."
+  },
+
+  "ui": {
+    "throw": "Throw",
+    "rolling": "Rolling…",
+    "settings": "Settings",
+    "back": "‹ Back",
+    "done": "Done",
+    "reset": "Reset",
+    "on": "On",
+    "off": "Off",
+    "edit": "Edit",
+    "noDiceSelected": "No dice selected. Open settings to choose.",
+    "shakeHint": "⤬  Shake to re-roll  ⤬",
+    "pickDiceToBegin": "Pick some dice to begin",
+    "resetConfirm": "Reset dice, accent, and background to defaults? Your customizations will be lost.",
+
+    "tabs": {
+      "dice": "Dice",
+      "look": "Look"
+    },
+
+    "aria": {
+      "settings": "Settings",
+      "pauseTimer": "Pause timer",
+      "startTimer": "Start timer",
+      "resetTimer": "Reset timer",
+      "mute": "Mute",
+      "unmute": "Unmute"
+    },
+
+    "timeOfDay": {
+      "morning": "This Morning's Roll",
+      "afternoon": "This Afternoon's Roll",
+      "evening": "This Evening's Roll",
+      "night": "Tonight's Roll"
+    },
+
+    "panels": {
+      "activeDice": "Active Dice",
+      "facesCount": "{count} faces",
+      "activeCount": "{active} of {total} dice active",
+      "color": "Color",
+      "faces": "Faces",
+      "accent": "Accent",
+      "mood": "Mood",
+      "language": "Language"
+    }
+  },
+
+  "accents": {
+    "rose": "Bisque",
+    "ember": "Ember",
+    "sage": "Sage",
+    "iris": "Iris",
+    "amber": "Amber"
+  },
+
+  "moods": {
+    "wine": "Wine",
+    "ink": "Ink",
+    "forest": "Forest",
+    "smoke": "Smoke"
+  },
+
+  "dice": [
+    {
+      "id": "activity_mf",
+      "label": "Activity (M/F)",
+      "group": "activity",
+      "active": true,
+      "palette": "blush",
+      "faces": ["Cowgirl", "69", "Eat her out", "Missionary", "Blowjob", "Doggy"]
+    },
+    {
+      "id": "activity_mm",
+      "label": "Activity (M/M)",
+      "group": "activity",
+      "active": false,
+      "palette": "ink",
+      "faces": ["Doggy", "69", "Blowjob", "Rimjob", "Anal", "Handjob"]
+    },
+    {
+      "id": "activity_ff",
+      "label": "Activity (F/F)",
+      "group": "activity",
+      "active": false,
+      "palette": "iris",
+      "faces": ["Scissor", "69", "Eat her out", "Strap-on", "Finger her", "Grind"]
+    },
+    {
+      "id": "location",
+      "label": "Location",
+      "active": false,
+      "palette": "sage",
+      "faces":   ["Counter",      "Bed",    "Kitchen",         "Bathroom",         "Couch",       "Floor"],
+      "phrases": ["on a counter", "in bed", "in the kitchen",  "in the bathroom",  "on a couch",  "on the floor"]
+    },
+    {
+      "id": "intensity",
+      "label": "Intensity",
+      "active": true,
+      "palette": "amber",
+      "faces": ["Gently", "Slowly", "Teasingly", "Intensely", "Quickly", "Roughly"]
+    },
+    {
+      "id": "duration",
+      "label": "Duration",
+      "active": true,
+      "palette": "bone",
+      "faces":   ["30 sec",          "30 sec",          "60 sec",          "60 sec",          "90 sec",          "90 sec"],
+      "phrases": ["for 30 seconds",  "for 30 seconds",  "for 60 seconds",  "for 60 seconds",  "for 90 seconds",  "for 90 seconds"]
+    }
+  ]
+}

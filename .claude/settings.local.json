@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(cp \"C:/Users/felto/.claude/projects/C--Users-felto-source-repos-dice/0880fadb-d769-43ff-847f-c4c452cf5585/tool-results/webfetch-1776886520546-p9wo73.bin\" /tmp/design.tar.gz)",
+      "Read(//c/tmp/**)",
+      "Bash(mkdir -p design)",
+      "Bash(tar -xzf design.tar.gz -C design)",
+      "Bash(cp \"/tmp/design/dice-game/project/app.jsx\" \"/c/Users/felto/source/repos/dice/app.jsx\")",
+      "Bash(cp \"/tmp/design/dice-game/project/dice-scene.jsx\" \"/c/Users/felto/source/repos/dice/dice-scene.jsx\")",
+      "Bash(cp \"/tmp/design/dice-game/project/main-screen.jsx\" \"/c/Users/felto/source/repos/dice/main-screen.jsx\")",
+      "Bash(cp \"/tmp/design/dice-game/project/settings-modal.jsx\" \"/c/Users/felto/source/repos/dice/settings-modal.jsx\")",
+      "Bash(cp \"/tmp/design/dice-game/project/tweaks-panel.jsx\" \"/c/Users/felto/source/repos/dice/tweaks-panel.jsx\")",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/src/main.jsx)",
+      "Bash(curl -s http://localhost:8001/es/)",
+      "Bash(curl -s http://localhost:8001/)",
+      "WebFetch(domain:en.wikipedia.org)"
+    ]
+  }
+}

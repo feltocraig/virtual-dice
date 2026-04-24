@@ -1,0 +1,144 @@
+{
+  "locale": "de",
+  "htmlLang": "de",
+  "name": "Deutsch",
+
+  "meta": {
+    "title": "Sex-Würfel Online — Kostenloses 3D-Würfelspiel für Paare | Virtual Sex Dice",
+    "description": "Sex-Würfel online kostenlos spielen. Echte 3D-Physik, anpassbare Seiten, läuft auf jedem Gerät. Kein Login. Für Paare, Solo oder Fernbeziehung.",
+    "ogTitle": "Sex-Würfel Online — Kostenloses 3D-Würfelspiel für Paare",
+    "ogDescription": "Sex-Würfel online kostenlos spielen. Echte 3D-Physik, anpassbare Seiten, läuft auf jedem Gerät. Kein Login. Für Paare, Solo oder Fernbeziehung.",
+    "ogSiteName": "Virtual Sex Dice",
+    "twitterTitle": "Sex-Würfel Online — Kostenloses 3D-Würfelspiel für Paare",
+    "twitterDescription": "Sex-Würfel online kostenlos spielen. Echte 3D-Physik, anpassbare Seiten, läuft auf jedem Gerät. Kein Login.",
+    "schemaName": "Virtual Sex Dice",
+    "schemaDescription": "Kostenloses, browserbasiertes 3D-Sex-Würfelspiel für Paare. Anpassbare Seiten, kein Login, läuft auf jedem Gerät."
+  },
+
+  "seoFallback": {
+    "eyebrow": "Virtual Sex Dice",
+    "heading": "Sex-Würfel Online für Paare — Kostenlos, Kein Login",
+    "lede": "Ein kostenloses, browserbasiertes 3D-Würfelspiel für Paare. Fünf anpassbare Würfel rollen mit echter Physik — welche Seite oben landet, bildet die Aufgabe für heute Nacht: eine Handlung, ein Körperteil, eine Dauer, eine Intensität, eine Position, eine Stimmung.",
+    "body": "Kein Login. Kein Tracking. Kein Download. Das Spiel läuft komplett im Browser auf jedem modernen Gerät. Wähle ein Sanft-, Würzig- oder Wild-Preset, oder bau dein eigenes Set und bearbeite jede Seite. Funktioniert genauso gut solo, persönlich oder per Bildschirmfreigabe auf Distanz.",
+    "bullets": [
+      "Echte 3D-Physik — Würfel rollen, stoßen und kommen wirklich zur Ruhe",
+      "Sechs Kategorien: Handlung, Körperteil, Dauer, Intensität, Position, Stimmung",
+      "Sanft-, Würzig- und Wild-Presets oder vollständig anpassbare Würfel",
+      "Privat von Haus aus — kein Konto, kein Tracking, offline nach dem ersten Laden"
+    ],
+    "noscript": "Dieses Spiel benötigt JavaScript und WebGL, um die 3D-Würfel zu rendern. Aktiviere JavaScript in deinem Browser oder öffne virtualsexdice.com in einem modernen Browser wie Chrome, Safari, Firefox oder Edge."
+  },
+
+  "ui": {
+    "throw": "Würfeln",
+    "rolling": "Würfeln…",
+    "settings": "Einstellungen",
+    "back": "‹ Zurück",
+    "done": "Fertig",
+    "reset": "Zurücksetzen",
+    "on": "Ein",
+    "off": "Aus",
+    "edit": "Bearbeiten",
+    "noDiceSelected": "Keine Würfel ausgewählt. Öffne die Einstellungen, um auszuwählen.",
+    "shakeHint": "⤬  Schütteln zum Neuwerfen  ⤬",
+    "pickDiceToBegin": "Wähle Würfel aus, um zu beginnen",
+    "resetConfirm": "Würfel, Akzent und Hintergrund auf Standard zurücksetzen? Deine Anpassungen gehen verloren.",
+
+    "tabs": {
+      "dice": "Würfel",
+      "look": "Stil"
+    },
+
+    "aria": {
+      "settings": "Einstellungen",
+      "pauseTimer": "Timer pausieren",
+      "startTimer": "Timer starten",
+      "resetTimer": "Timer zurücksetzen",
+      "mute": "Stummschalten",
+      "unmute": "Ton einschalten"
+    },
+
+    "timeOfDay": {
+      "morning": "Wurf des Morgens",
+      "afternoon": "Wurf des Nachmittags",
+      "evening": "Wurf des Abends",
+      "night": "Wurf der Nacht"
+    },
+
+    "panels": {
+      "activeDice": "Aktive Würfel",
+      "facesCount": "{count} Seiten",
+      "activeCount": "{active} von {total} Würfeln aktiv",
+      "color": "Farbe",
+      "faces": "Seiten",
+      "accent": "Akzent",
+      "mood": "Stimmung",
+      "language": "Sprache"
+    }
+  },
+
+  "accents": {
+    "rose": "Rosé",
+    "ember": "Glut",
+    "sage": "Salbei",
+    "iris": "Iris",
+    "amber": "Bernstein"
+  },
+
+  "moods": {
+    "wine": "Wein",
+    "ink": "Tinte",
+    "forest": "Wald",
+    "smoke": "Rauch"
+  },
+
+  "dice": [
+    {
+      "id": "activity_mf",
+      "label": "Aktivität (M/W)",
+      "group": "activity",
+      "active": true,
+      "palette": "blush",
+      "faces": ["Reitstellung", "69", "Lecken", "Missionar", "Blasen", "Doggy"]
+    },
+    {
+      "id": "activity_mm",
+      "label": "Aktivität (M/M)",
+      "group": "activity",
+      "active": false,
+      "palette": "ink",
+      "faces": ["Doggy", "69", "Blasen", "Rimming", "Anal", "Handjob"]
+    },
+    {
+      "id": "activity_ff",
+      "label": "Aktivität (W/W)",
+      "group": "activity",
+      "active": false,
+      "palette": "iris",
+      "faces": ["Scheren", "69", "Lecken", "Strap-On", "Fingern", "Reiben"]
+    },
+    {
+      "id": "location",
+      "label": "Ort",
+      "active": false,
+      "palette": "sage",
+      "faces":   ["Theke",           "Bett",    "Küche",          "Bad",       "Sofa",           "Boden"],
+      "phrases": ["auf der Theke",   "im Bett", "in der Küche",   "im Bad",    "auf dem Sofa",   "auf dem Boden"]
+    },
+    {
+      "id": "intensity",
+      "label": "Intensität",
+      "active": true,
+      "palette": "amber",
+      "faces": ["Sanft", "Langsam", "Neckend", "Intensiv", "Schnell", "Hart"]
+    },
+    {
+      "id": "duration",
+      "label": "Dauer",
+      "active": true,
+      "palette": "bone",
+      "faces":   ["30 Sek",             "30 Sek",             "60 Sek",             "60 Sek",             "90 Sek",             "90 Sek"],
+      "phrases": ["für 30 Sekunden",    "für 30 Sekunden",    "für 60 Sekunden",    "für 60 Sekunden",    "für 90 Sekunden",    "für 90 Sekunden"]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Virtual Sex Dice
+
+> A free, browser-based 3D sex dice game for couples. Five customizable dice roll in a realistic 3D scene; the face that lands up on each die forms a prompt sentence (action, body part, duration, intensity, position, mood). No signup, no tracking, works on any device with a modern browser.
+
+## What it is
+Virtual Sex Dice is a web app — not a native app or a physical product. It runs entirely in the browser using WebGL. The dice are rendered with Three.js and obey a hand-rolled physics model (gravity, floor bounce, dice-to-dice collision).
+
+## Who it's for
+Couples looking for a private, low-effort bedroom activity. Works equally well for solo play and long-distance partners (screen-share the roll).
+
+## Key features
+- **3D physics**: dice actually tumble and settle — not a random-number animation
+- **Customizable faces**: pick which prompt categories each die shows (action, body part, duration, intensity, position, mood)
+- **No signup, no account**: the game is free and anonymous
+- **Works offline after first load**: the app is a static site
+- **Multi-device**: designed for mobile and desktop; touch and mouse both work
+
+## Primary URL
+- https://virtualsexdice.com/ — the game itself (the home page is the product)
+
+## What this site is not
+- Not a physical dice product (no shipping, no purchase)
+- Not an adult video or image site
+- Not a chat, match, or dating service
+- No user accounts, no data collection beyond anonymous usage analytics
+
+## Attribution
+If you cite this tool, "Virtual Sex Dice" is the canonical brand name and https://virtualsexdice.com/ is the canonical URL.

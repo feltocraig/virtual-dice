@@ -1,0 +1,144 @@
+{
+  "locale": "es",
+  "htmlLang": "es",
+  "name": "Español",
+
+  "meta": {
+    "title": "Dados Sexuales en Línea — Juego 3D Gratis para Parejas | Virtual Sex Dice",
+    "description": "Juega dados sexuales en línea gratis. Física 3D real, caras personalizables, funciona en cualquier dispositivo. Sin registro. Para parejas, en solitario o a distancia.",
+    "ogTitle": "Dados Sexuales en Línea — Juego 3D Gratis para Parejas",
+    "ogDescription": "Juega dados sexuales en línea gratis. Física 3D real, caras personalizables, funciona en cualquier dispositivo. Sin registro. Para parejas, en solitario o a distancia.",
+    "ogSiteName": "Virtual Sex Dice",
+    "twitterTitle": "Dados Sexuales en Línea — Juego 3D Gratis para Parejas",
+    "twitterDescription": "Juega dados sexuales en línea gratis. Física 3D real, caras personalizables, funciona en cualquier dispositivo. Sin registro.",
+    "schemaName": "Virtual Sex Dice",
+    "schemaDescription": "Juego de dados sexuales 3D gratuito en el navegador para parejas. Caras personalizables, sin registro, funciona en cualquier dispositivo."
+  },
+
+  "seoFallback": {
+    "eyebrow": "Virtual Sex Dice",
+    "heading": "Dados Sexuales en Línea para Parejas — Gratis, Sin Registro",
+    "lede": "Un juego de dados 3D gratuito en el navegador para parejas. Cinco dados personalizables ruedan con física real — la cara que queda arriba forma la consigna de la noche: una acción, una parte del cuerpo, una duración, una intensidad, una posición, un estado de ánimo.",
+    "body": "Sin registro. Sin seguimiento. Sin descargas. El juego funciona íntegramente en tu navegador en cualquier dispositivo moderno. Elige un preset Tierno, Picante o Salvaje, o arma tu propio set editando cada cara. Funciona igual de bien en solitario, en persona o a distancia por pantalla compartida.",
+    "bullets": [
+      "Física 3D real — los dados realmente ruedan, chocan y se detienen",
+      "Seis categorías: acción, parte del cuerpo, duración, intensidad, posición, ánimo",
+      "Presets Tierno, Picante y Salvaje, o dados totalmente personalizados",
+      "Privado por defecto — sin cuenta, sin seguimiento, funciona sin conexión después de la primera carga"
+    ],
+    "noscript": "Este juego necesita JavaScript y WebGL para renderizar los dados 3D. Activa JavaScript en tu navegador, o abre virtualsexdice.com en un navegador moderno como Chrome, Safari, Firefox o Edge."
+  },
+
+  "ui": {
+    "throw": "Tirar",
+    "rolling": "Tirando…",
+    "settings": "Ajustes",
+    "back": "‹ Volver",
+    "done": "Listo",
+    "reset": "Restablecer",
+    "on": "Sí",
+    "off": "No",
+    "edit": "Editar",
+    "noDiceSelected": "No hay dados seleccionados. Abre ajustes para elegir.",
+    "shakeHint": "⤬  Agita para tirar de nuevo  ⤬",
+    "pickDiceToBegin": "Elige algunos dados para comenzar",
+    "resetConfirm": "¿Restablecer dados, color y fondo a los valores por defecto? Se perderán tus personalizaciones.",
+
+    "tabs": {
+      "dice": "Dados",
+      "look": "Apariencia"
+    },
+
+    "aria": {
+      "settings": "Ajustes",
+      "pauseTimer": "Pausar temporizador",
+      "startTimer": "Iniciar temporizador",
+      "resetTimer": "Reiniciar temporizador",
+      "mute": "Silenciar",
+      "unmute": "Activar sonido"
+    },
+
+    "timeOfDay": {
+      "morning": "Tirada de la Mañana",
+      "afternoon": "Tirada de la Tarde",
+      "evening": "Tirada del Anochecer",
+      "night": "Tirada de Esta Noche"
+    },
+
+    "panels": {
+      "activeDice": "Dados Activos",
+      "facesCount": "{count} caras",
+      "activeCount": "{active} de {total} dados activos",
+      "color": "Color",
+      "faces": "Caras",
+      "accent": "Acento",
+      "mood": "Ambiente",
+      "language": "Idioma"
+    }
+  },
+
+  "accents": {
+    "rose": "Rosado",
+    "ember": "Brasa",
+    "sage": "Salvia",
+    "iris": "Iris",
+    "amber": "Ámbar"
+  },
+
+  "moods": {
+    "wine": "Vino",
+    "ink": "Tinta",
+    "forest": "Bosque",
+    "smoke": "Humo"
+  },
+
+  "dice": [
+    {
+      "id": "activity_mf",
+      "label": "Actividad (H/M)",
+      "group": "activity",
+      "active": true,
+      "palette": "blush",
+      "faces": ["Vaquera", "69", "Sexo oral", "Misionero", "Mamada", "Perrito"]
+    },
+    {
+      "id": "activity_mm",
+      "label": "Actividad (H/H)",
+      "group": "activity",
+      "active": false,
+      "palette": "ink",
+      "faces": ["Perrito", "69", "Mamada", "Anilingus", "Anal", "Paja"]
+    },
+    {
+      "id": "activity_ff",
+      "label": "Actividad (M/M)",
+      "group": "activity",
+      "active": false,
+      "palette": "iris",
+      "faces": ["Tijeras", "69", "Sexo oral", "Arnés", "Dedos", "Frotarse"]
+    },
+    {
+      "id": "location",
+      "label": "Lugar",
+      "active": false,
+      "palette": "sage",
+      "faces":   ["Encimera",         "Cama",      "Cocina",         "Baño",          "Sofá",          "Suelo"],
+      "phrases": ["sobre la encimera", "en la cama", "en la cocina",  "en el baño",    "en el sofá",    "en el suelo"]
+    },
+    {
+      "id": "intensity",
+      "label": "Intensidad",
+      "active": true,
+      "palette": "amber",
+      "faces": ["Suave", "Despacio", "Provocando", "Intenso", "Rápido", "Fuerte"]
+    },
+    {
+      "id": "duration",
+      "label": "Duración",
+      "active": true,
+      "palette": "bone",
+      "faces":   ["30 s",               "30 s",               "60 s",               "60 s",               "90 s",               "90 s"],
+      "phrases": ["durante 30 segundos", "durante 30 segundos", "durante 60 segundos", "durante 60 segundos", "durante 90 segundos", "durante 90 segundos"]
+    }
+  ]
+}

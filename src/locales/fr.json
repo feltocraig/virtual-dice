@@ -1,0 +1,144 @@
+{
+  "locale": "fr",
+  "htmlLang": "fr",
+  "name": "Français",
+
+  "meta": {
+    "title": "Dés Sexuels en Ligne — Jeu 3D Gratuit pour Couples | Virtual Sex Dice",
+    "description": "Joue aux dés sexuels en ligne gratuitement. Vraie physique 3D, faces personnalisables, fonctionne sur tout appareil. Sans inscription. Pour couples, en solo ou à distance.",
+    "ogTitle": "Dés Sexuels en Ligne — Jeu 3D Gratuit pour Couples",
+    "ogDescription": "Joue aux dés sexuels en ligne gratuitement. Vraie physique 3D, faces personnalisables, fonctionne sur tout appareil. Sans inscription. Pour couples, en solo ou à distance.",
+    "ogSiteName": "Virtual Sex Dice",
+    "twitterTitle": "Dés Sexuels en Ligne — Jeu 3D Gratuit pour Couples",
+    "twitterDescription": "Joue aux dés sexuels en ligne gratuitement. Vraie physique 3D, faces personnalisables, fonctionne sur tout appareil.",
+    "schemaName": "Virtual Sex Dice",
+    "schemaDescription": "Jeu de dés sexuels 3D gratuit dans le navigateur pour couples. Faces personnalisables, sans inscription, fonctionne sur tout appareil."
+  },
+
+  "seoFallback": {
+    "eyebrow": "Virtual Sex Dice",
+    "heading": "Dés Sexuels en Ligne pour Couples — Gratuit, Sans Inscription",
+    "lede": "Un jeu de dés 3D gratuit dans le navigateur pour couples. Cinq dés personnalisables roulent avec une vraie physique — la face qui reste en haut forme la consigne du soir : une action, une partie du corps, une durée, une intensité, une position, une ambiance.",
+    "body": "Sans inscription. Sans suivi. Sans téléchargement. Le jeu fonctionne entièrement dans ton navigateur sur tout appareil moderne. Choisis un preset Doux, Épicé ou Sauvage, ou construis ton propre set et édite chaque face. Fonctionne aussi bien en solo, en personne ou à distance via partage d'écran.",
+    "bullets": [
+      "Vraie physique 3D — les dés roulent, se heurtent et s'immobilisent réellement",
+      "Six catégories : action, partie du corps, durée, intensité, position, ambiance",
+      "Presets Doux, Épicé et Sauvage, ou dés entièrement personnalisés",
+      "Privé par défaut — pas de compte, pas de suivi, fonctionne hors ligne après le premier chargement"
+    ],
+    "noscript": "Ce jeu nécessite JavaScript et WebGL pour afficher les dés 3D. Active JavaScript dans ton navigateur, ou ouvre virtualsexdice.com dans un navigateur moderne comme Chrome, Safari, Firefox ou Edge."
+  },
+
+  "ui": {
+    "throw": "Lancer",
+    "rolling": "Lancement…",
+    "settings": "Paramètres",
+    "back": "‹ Retour",
+    "done": "Terminé",
+    "reset": "Réinitialiser",
+    "on": "Oui",
+    "off": "Non",
+    "edit": "Modifier",
+    "noDiceSelected": "Aucun dé sélectionné. Ouvre les paramètres pour choisir.",
+    "shakeHint": "⤬  Secoue pour relancer  ⤬",
+    "pickDiceToBegin": "Choisis des dés pour commencer",
+    "resetConfirm": "Réinitialiser les dés, l'accent et l'ambiance aux valeurs par défaut ? Tes personnalisations seront perdues.",
+
+    "tabs": {
+      "dice": "Dés",
+      "look": "Apparence"
+    },
+
+    "aria": {
+      "settings": "Paramètres",
+      "pauseTimer": "Mettre en pause",
+      "startTimer": "Démarrer le minuteur",
+      "resetTimer": "Réinitialiser le minuteur",
+      "mute": "Couper le son",
+      "unmute": "Activer le son"
+    },
+
+    "timeOfDay": {
+      "morning": "Lancer du Matin",
+      "afternoon": "Lancer de l'Après-midi",
+      "evening": "Lancer du Soir",
+      "night": "Lancer de la Nuit"
+    },
+
+    "panels": {
+      "activeDice": "Dés Actifs",
+      "facesCount": "{count} faces",
+      "activeCount": "{active} sur {total} dés actifs",
+      "color": "Couleur",
+      "faces": "Faces",
+      "accent": "Accent",
+      "mood": "Ambiance",
+      "language": "Langue"
+    }
+  },
+
+  "accents": {
+    "rose": "Bisque",
+    "ember": "Braise",
+    "sage": "Sauge",
+    "iris": "Iris",
+    "amber": "Ambre"
+  },
+
+  "moods": {
+    "wine": "Vin",
+    "ink": "Encre",
+    "forest": "Forêt",
+    "smoke": "Fumée"
+  },
+
+  "dice": [
+    {
+      "id": "activity_mf",
+      "label": "Activité (H/F)",
+      "group": "activity",
+      "active": true,
+      "palette": "blush",
+      "faces": ["Amazone", "69", "Cunni", "Missionnaire", "Pipe", "Levrette"]
+    },
+    {
+      "id": "activity_mm",
+      "label": "Activité (H/H)",
+      "group": "activity",
+      "active": false,
+      "palette": "ink",
+      "faces": ["Levrette", "69", "Pipe", "Anulingus", "Anal", "Branlette"]
+    },
+    {
+      "id": "activity_ff",
+      "label": "Activité (F/F)",
+      "group": "activity",
+      "active": false,
+      "palette": "iris",
+      "faces": ["Ciseaux", "69", "Cunni", "Gode-ceinture", "Doigter", "Frotter"]
+    },
+    {
+      "id": "location",
+      "label": "Lieu",
+      "active": false,
+      "palette": "sage",
+      "faces":   ["Comptoir",        "Lit",    "Cuisine",          "Salle de bain",          "Canapé",          "Sol"],
+      "phrases": ["sur le comptoir", "au lit", "dans la cuisine",  "dans la salle de bain",  "sur le canapé",   "par terre"]
+    },
+    {
+      "id": "intensity",
+      "label": "Intensité",
+      "active": true,
+      "palette": "amber",
+      "faces": ["Doucement", "Lentement", "Taquin", "Intensément", "Rapidement", "Brutalement"]
+    },
+    {
+      "id": "duration",
+      "label": "Durée",
+      "active": true,
+      "palette": "bone",
+      "faces":   ["30 s",                  "30 s",                  "60 s",                  "60 s",                  "90 s",                  "90 s"],
+      "phrases": ["pendant 30 secondes",   "pendant 30 secondes",   "pendant 60 secondes",   "pendant 60 secondes",   "pendant 90 secondes",   "pendant 90 secondes"]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "locale": "it",
+  "htmlLang": "it",
+  "name": "Italiano",
+
+  "meta": {
+    "title": "Dadi Sexy Online — Gioco 3D Gratis per Coppie | Virtual Sex Dice",
+    "description": "Gioca ai dadi sexy online gratis. Vera fisica 3D, facce personalizzabili, funziona su qualsiasi dispositivo. Senza registrazione. Per coppie, in solitaria o a distanza.",
+    "ogTitle": "Dadi Sexy Online — Gioco 3D Gratis per Coppie",
+    "ogDescription": "Gioca ai dadi sexy online gratis. Vera fisica 3D, facce personalizzabili, funziona su qualsiasi dispositivo. Senza registrazione. Per coppie, in solitaria o a distanza.",
+    "ogSiteName": "Virtual Sex Dice",
+    "twitterTitle": "Dadi Sexy Online — Gioco 3D Gratis per Coppie",
+    "twitterDescription": "Gioca ai dadi sexy online gratis. Vera fisica 3D, facce personalizzabili, funziona su qualsiasi dispositivo.",
+    "schemaName": "Virtual Sex Dice",
+    "schemaDescription": "Gioco di dadi sexy 3D gratuito nel browser per coppie. Facce personalizzabili, senza registrazione, funziona su qualsiasi dispositivo."
+  },
+
+  "seoFallback": {
+    "eyebrow": "Virtual Sex Dice",
+    "heading": "Dadi Sexy Online per Coppie — Gratis, Senza Registrazione",
+    "lede": "Un gioco di dadi 3D gratuito nel browser per coppie. Cinque dadi personalizzabili rotolano con fisica reale — la faccia che resta in alto forma la consegna della serata: un'azione, una parte del corpo, una durata, un'intensità, una posizione, un'atmosfera.",
+    "body": "Senza registrazione. Senza tracciamento. Senza download. Il gioco funziona interamente nel tuo browser su qualsiasi dispositivo moderno. Scegli un preset Dolce, Piccante o Selvaggio, o costruisci il tuo set e modifica ogni faccia. Funziona bene sia in solitaria, di persona o a distanza via condivisione schermo.",
+    "bullets": [
+      "Vera fisica 3D — i dadi rotolano, si scontrano e si fermano davvero",
+      "Sei categorie: azione, parte del corpo, durata, intensità, posizione, atmosfera",
+      "Preset Dolce, Piccante e Selvaggio, o dadi completamente personalizzati",
+      "Privato per impostazione predefinita — nessun account, nessun tracciamento, funziona offline dopo il primo caricamento"
+    ],
+    "noscript": "Questo gioco richiede JavaScript e WebGL per renderizzare i dadi 3D. Attiva JavaScript nel tuo browser, o apri virtualsexdice.com in un browser moderno come Chrome, Safari, Firefox o Edge."
+  },
+
+  "ui": {
+    "throw": "Lancia",
+    "rolling": "Lancio…",
+    "settings": "Impostazioni",
+    "back": "‹ Indietro",
+    "done": "Fatto",
+    "reset": "Reimposta",
+    "on": "Sì",
+    "off": "No",
+    "edit": "Modifica",
+    "noDiceSelected": "Nessun dado selezionato. Apri le impostazioni per scegliere.",
+    "shakeHint": "⤬  Scuoti per rilanciare  ⤬",
+    "pickDiceToBegin": "Scegli alcuni dadi per iniziare",
+    "resetConfirm": "Reimpostare dadi, accento e sfondo ai valori predefiniti? Le tue personalizzazioni saranno perse.",
+
+    "tabs": {
+      "dice": "Dadi",
+      "look": "Aspetto"
+    },
+
+    "aria": {
+      "settings": "Impostazioni",
+      "pauseTimer": "Metti in pausa il timer",
+      "startTimer": "Avvia il timer",
+      "resetTimer": "Reimposta il timer",
+      "mute": "Silenzia",
+      "unmute": "Attiva l'audio"
+    },
+
+    "timeOfDay": {
+      "morning": "Tirata del Mattino",
+      "afternoon": "Tirata del Pomeriggio",
+      "evening": "Tirata della Sera",
+      "night": "Tirata di Stanotte"
+    },
+
+    "panels": {
+      "activeDice": "Dadi Attivi",
+      "facesCount": "{count} facce",
+      "activeCount": "{active} di {total} dadi attivi",
+      "color": "Colore",
+      "faces": "Facce",
+      "accent": "Accento",
+      "mood": "Atmosfera",
+      "language": "Lingua"
+    }
+  },
+
+  "accents": {
+    "rose": "Rosato",
+    "ember": "Brace",
+    "sage": "Salvia",
+    "iris": "Iris",
+    "amber": "Ambra"
+  },
+
+  "moods": {
+    "wine": "Vino",
+    "ink": "Inchiostro",
+    "forest": "Bosco",
+    "smoke": "Fumo"
+  },
+
+  "dice": [
+    {
+      "id": "activity_mf",
+      "label": "Attività (U/D)",
+      "group": "activity",
+      "active": true,
+      "palette": "blush",
+      "faces": ["Amazzone", "69", "Leccata", "Missionario", "Pompino", "Pecorina"]
+    },
+    {
+      "id": "activity_mm",
+      "label": "Attività (U/U)",
+      "group": "activity",
+      "active": false,
+      "palette": "ink",
+      "faces": ["Pecorina", "69", "Pompino", "Rimming", "Anale", "Sega"]
+    },
+    {
+      "id": "activity_ff",
+      "label": "Attività (D/D)",
+      "group": "activity",
+      "active": false,
+      "palette": "iris",
+      "faces": ["Forbici", "69", "Leccata", "Strap-on", "Ditalino", "Strofinare"]
+    },
+    {
+      "id": "location",
+      "label": "Luogo",
+      "active": false,
+      "palette": "sage",
+      "faces":   ["Bancone",     "Letto",   "Cucina",      "Bagno",     "Divano",      "Pavimento"],
+      "phrases": ["sul bancone", "a letto", "in cucina",   "in bagno",  "sul divano",  "sul pavimento"]
+    },
+    {
+      "id": "intensity",
+      "label": "Intensità",
+      "active": true,
+      "palette": "amber",
+      "faces": ["Delicato", "Lento", "Provocando", "Intenso", "Rapido", "Forte"]
+    },
+    {
+      "id": "duration",
+      "label": "Durata",
+      "active": true,
+      "palette": "bone",
+      "faces":   ["30 s",            "30 s",            "60 s",            "60 s",            "90 s",            "90 s"],
+      "phrases": ["per 30 secondi",  "per 30 secondi",  "per 60 secondi",  "per 60 secondi",  "per 90 secondi",  "per 90 secondi"]
+    }
+  ]
+}
