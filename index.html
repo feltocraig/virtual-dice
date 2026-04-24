@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Couples Dice Game — Fun for Adults</title>
+  <meta name="description" content="Enjoy an interactive 3D dice game for couples. Spice up your relationship with fun and excitement.">
+  <link rel="canonical" href="https://virtualsexdice.com/">
+  <meta name="theme-color" content="#0a0608">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Virtual Sex Dice">
+  <meta property="og:title" content="Interactive Couples Dice Game — Fun for Adults">
+  <meta property="og:description" content="Enjoy an interactive 3D dice game for couples. Spice up your relationship with fun and excitement.">
+  <meta property="og:url" content="https://virtualsexdice.com/">
+  <meta property="og:image" content="https://virtualsexdice.com/og-image.jpg">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="Virtual Sex Dice — 3D dice mid-roll">
+  <meta property="og:locale" content="en_EN">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Interactive Couples Dice Game — Fun for Adults">
+  <meta name="twitter:description" content="Enjoy an interactive 3D dice game for couples. Spice up your relationship with fun and excitement.">
+  <meta name="twitter:image" content="https://virtualsexdice.com/og-image.jpg">
+  <meta name="twitter:image:alt" content="Virtual Sex Dice — 3D dice mid-roll">
+
+    <link rel="alternate" hreflang="de" href="https://virtualsexdice.com/de/">
+  <link rel="alternate" hreflang="en" href="https://virtualsexdice.com/">
+  <link rel="alternate" hreflang="es" href="https://virtualsexdice.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://virtualsexdice.com/fr/">
+  <link rel="alternate" hreflang="it" href="https://virtualsexdice.com/it/">
+  <link rel="alternate" hreflang="x-default" href="https://virtualsexdice.com/">
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://virtualsexdice.com/#org",
+        "name": "Virtual Sex Dice",
+        "url": "https://virtualsexdice.com/",
+        "logo": "https://virtualsexdice.com/og-image.jpg"
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://virtualsexdice.com/#webapp",
+        "name": "Virtual Sex Dice",
+        "url": "https://virtualsexdice.com/",
+        "description": "An interactive 3D dice game for couples. Spice up your relationship with fun and excitement.",
+        "image": "https://virtualsexdice.com/og-image.jpg",
+        "applicationCategory": "GameApplication",
+        "inLanguage": "en",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires JavaScript and WebGL",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      },
+      {
+        "@type": "Game",
+        "@id": "https://virtualsexdice.com/#game",
+        "name": "Virtual Sex Dice",
+        "url": "https://virtualsexdice.com/",
+        "image": "https://virtualsexdice.com/og-image.jpg",
+        "genre": "Couples game",
+        "numberOfPlayers": "1-2",
+        "inLanguage": "en"
+      }
+    ]
+  }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: #0a0608;
+    }
+    html, body { overflow: hidden; }
+    #stage {
+      width: 100vw; height: 100dvh;
+      background: #0a0608;
+    }
+    #app {
+      position: relative;
+      width: 100%; height: 100dvh;
+    }
+    ::-webkit-scrollbar { width: 0; height: 0; }
+
+    /* Hidden by default — React replaces #app on mount, so JS-enabled users
+       never see this. The noscript override below re-shows it when JS is off.
+       Crawlers parsing raw HTML still see the content in source regardless. */
+    .seo-fallback {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: clamp(48px, 8vh, 96px) 24px;
+      color: #F4ECE0;
+      text-align: center;
+    }
+    .seo-fallback .eyebrow {
+      font-size: 11px;
+      letter-spacing: 2.8px;
+      text-transform: uppercase;
+      color: rgba(244, 236, 224, 0.5);
+      margin: 0 0 16px;
+    }
+    .seo-fallback h1 {
+      font-family: 'Instrument Serif', 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.12;
+      letter-spacing: -0.5px;
+      margin: 0 0 24px;
+      color: #F4ECE0;
+    }
+    .seo-fallback p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(244, 236, 224, 0.78);
+      margin: 0 0 18px;
+    }
+    .seo-fallback .lede {
+      font-size: 18px;
+      color: rgba(244, 236, 224, 0.92);
+    }
+    .seo-fallback ul {
+      list-style: none;
+      padding: 0;
+      margin: 28px 0 0;
+      display: grid;
+      gap: 10px;
+      text-align: left;
+      font-size: 15px;
+      color: rgba(244, 236, 224, 0.72);
+    }
+    .seo-fallback li {
+      padding-left: 22px;
+      position: relative;
+    }
+    .seo-fallback li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.55em;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #C97A5C;
+    }
+    .seo-fallback noscript p {
+      margin-top: 28px;
+      padding: 16px 20px;
+      border: 1px solid rgba(244, 236, 224, 0.14);
+      border-radius: 12px;
+      background: rgba(244, 236, 224, 0.04);
+    }
+    .seo-fallback a { color: #C97A5C; }
+  </style>
+  <noscript>
+    <style>.seo-fallback { display: block; }</style>
+  </noscript>
+  <script type="module" crossorigin src="/assets/index-B-2gDmqa.js"></script>
+</head>
+<body>
+  <div id="stage">
+    <div id="app">
+      <main class="seo-fallback">
+        <p class="eyebrow">Virtual Sex Dice</p>
+        <h1>A Dice Game for Couples — Spice Things Up Together</h1>
+        <p class="lede">An interactive 3D dice game for couples. Roll the dice and let them set the scene — an activity, a location, an intensity, a duration.</p>
+        <p>A playful way to let chance lead the way tonight. Customize every face to suit the two of you, or jump straight in. Works on any modern device — phone, tablet, or laptop.</p>
+        <ul>
+          <li>Real 3D physics — dice actually tumble, collide, and settle</li>
+          <li>Customize every face to fit your relationship</li>
+          <li>Shake your phone to roll, or tap to throw</li>
+          <li>Available in English, Spanish, German, French, and Italian</li>
+        </ul>
+        <noscript>
+          <p>This game needs JavaScript and WebGL to render the 3D dice. Enable JavaScript in your browser, or open virtualsexdice.com in a modern browser like Chrome, Safari, Firefox, or Edge.</p>
+        </noscript>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
